@@ -1,31 +1,62 @@
-#include <Arduino.h>
 #include <Wire.h>
+#include "SparkFun_ENS160.h"
+#include "SparkFunBME280.h"
+#include <SparkFun_Qwiic_OLED.h>
 #include <SerLCD.h>
 
-#define SER_LCD_ENABLED
-#define SER_LCD_I2C_ADDRESS 0x72
-#define DISPLAY_ADDRESS1 0x72
-
-SerLCD lcd; // Declare the lcd object globally
-
-// put function declarations here:
+SparkFun_ENS160 ens160;
+BME280 bme280;
+SerLCD lcd;
+int ensStatus;
 
 void setup()
 {
+  Serial.begin(115200);
   Wire.begin();
 
-  lcd.begin(Wire); // Set up the LCD for I2C communication
+  if (!ens160.begin())
+  {
+    Serial.println("ENS160: Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
 
-  lcd.setBacklight(255, 255, 255); // Set backlight to bright white
-  lcd.setContrast(5);              // Set contrast. Lower to 0 for higher contrast.
+  if (!bme280.beginI2C())
+  {
+    Serial.println("BME280: Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
 
-  lcd.clear(); // Clear the display - this moves the cursor to home position as well
-  lcd.print("Hello, World!");
+  Wire1.begin();
+  lcd.begin(Wire1);
+  lcd.setAddress(0x72);
+  lcd.clear();
+}
+
+void printCO2()
+{
+
+  Serial.print("CO2: ");
+  Serial.print(ens160.getECO2());
+  Serial.println(" ppm");
+}
+
+void printTemp()
+{
+  Serial.print("Temp: ");
+  Serial.print(bme280.readTempC(), 3);
+  Serial.println(" °C");
 }
 
 void loop()
 {
-  // put your main code here, to run repeatedly:
+  lcd.print("CO2: ");
+  lcd.print(ens160.getECO2());
+  lcd.println(" ppm");
+  lcd.print("Temp: ");
+  lcd.print(bme280.readTempC(), 2);
+  lcd.println(" C");
+  Serial.println("");
+  delay(1000);
 }
-
-// put function definitions here:
