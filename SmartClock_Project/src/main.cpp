@@ -37,6 +37,18 @@ void setup()
   lcd.setAddress(0x72);
   lcd.clear();
   lcd.setContrast(50);
+
+  lcd.createChar(0, smiley);
+  lcd.createChar(1, frownie);
+}
+
+void printTemp()
+{
+  lcd.print("Temp: ");
+  lcd.print(temp - diff, 2);
+  lcd.println(" C");
+
+  delay(200);
 }
 
 void loop()
