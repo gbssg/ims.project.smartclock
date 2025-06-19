@@ -27,6 +27,11 @@ void setup()
       ;
   }
 
+  if (ens160.setOperatingMode(SFE_ENS160_RESET))
+    Serial.println("Ready.");
+
+  ens160.setOperatingMode(SFE_ENS160_STANDARD);
+
   Wire1.begin();
   lcd.begin(Wire1);
   lcd.setAddress(0x72);
@@ -42,6 +47,5 @@ void loop()
   lcd.print("Temp: ");
   lcd.print(bme280.readTempC(), 2);
   lcd.println(" C");
-  Serial.println("");
   delay(200);
 }
