@@ -7,7 +7,6 @@
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
-int ensStatus;
 
 void setup()
 {
@@ -32,31 +31,17 @@ void setup()
   lcd.begin(Wire1);
   lcd.setAddress(0x72);
   lcd.clear();
-}
-
-void printCO2()
-{
-
-  Serial.print("CO2: ");
-  Serial.print(ens160.getECO2());
-  Serial.println(" ppm");
-}
-
-void printTemp()
-{
-  Serial.print("Temp: ");
-  Serial.print(bme280.readTempC(), 3);
-  Serial.println(" °C");
+  lcd.setContrast(50);
 }
 
 void loop()
 {
-  lcd.print("CO2: ");
+  lcd.print("CO2 : ");
   lcd.print(ens160.getECO2());
   lcd.println(" ppm");
   lcd.print("Temp: ");
   lcd.print(bme280.readTempC(), 2);
   lcd.println(" C");
   Serial.println("");
-  delay(1000);
+  delay(200);
 }
