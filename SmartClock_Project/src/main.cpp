@@ -3,13 +3,22 @@
 #include "SparkFunBME280.h"
 #include <SparkFun_Qwiic_OLED.h>
 #include <SerLCD.h>
+#include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
 
+QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
 int ppm;
 int tempDiff = 4;
 float temp;
+
+int startHour = 12;
+int startMinute = 22;
+int startSecond = 20;
+
+long lastMillis = 0;
+long totalSeconds = 0;
 
 byte smiley[8] = {
     0b00000,
@@ -44,13 +53,12 @@ byte frownie[8] = {
 byte tot[8] = {
     0b00000,
     0b00000,
-    0b10101, // X   X  (Augen)
+    0b10101,
     0b00000,
     0b00000,
     0b00000,
-    0b01110, // Mund
-    0b10001  // Wangen/Umriss
-};
+    0b01110,
+    0b10001};
 
 void setup()
 {
@@ -71,6 +79,13 @@ void setup()
       ;
   }
 
+  if (buzzer.begin() == false)
+  {
+    Serial.println("Buzzer Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
+
   if (ens160.setOperatingMode(SFE_ENS160_RESET))
     Serial.println("Ready.");
 
@@ -86,6 +101,8 @@ void setup()
   lcd.createChar(1, neutral);
   lcd.createChar(2, frownie);
   lcd.createChar(3, tot);
+
+  totalSeconds = startHour * 3600 + startMinute * 60 + startSecond;
 }
 
 void printTemp()
@@ -113,7 +130,7 @@ void printCO2()
   lcd.print(ppm);
   lcd.print(" ppm");
   lcd.setCursor(15, 0);
-  if (ppm <= 400)
+  if (ppm <= 600)
   {
     lcd.writeChar(0);
   }
@@ -127,6 +144,22 @@ void printCO2()
   }
 }
 
+void buzzshort()
+{
+  buzzer.on();
+  delay(1000);
+  buzzer.off();
+  delay(1000);
+}
+
+void buzzlong()
+{
+  buzzer.on();
+  delay(2000);
+  buzzer.off();
+  delay(1000);
+}
+
 void loop()
 {
   ppm = ens160.getECO2();
@@ -135,4 +168,28 @@ void loop()
   printCO2();
   printTemp();
   delay(200);
+
+  if (ppm > 700)
+  {
+    buzzshort();
+  }
+
+  if (ppm > 1000)
+  {
+    buzzlong();
+  }
+
+  long currentMillis = millis();
+
+  if (currentMillis - lastMillis >= 1000)
+  {
+    lastMillis = currentMillis;
+    totalSeconds++;
+
+    int hours = (totalSeconds / 3600) % 24;
+    int minutes = (totalSeconds / 60) % 60;
+    int seconds = totalSeconds % 60;
+
+    Serial.printf("%02d:%02d:%02d\n", hours, minutes, seconds);
+  }
 }
