@@ -4,21 +4,22 @@
 #include <SparkFun_Qwiic_OLED.h>
 #include <SerLCD.h>
 #include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
+#include <ESP32Time.h>
+#include <time.h>
+#include <ClockProvider.h>
+#include <SparkFun_Qwiic_Button.h>
 
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
+QwiicButton button;
+static ESP32Time rtc;
 int ppm;
 int tempDiff = 4;
 float temp;
-
-int startHour = 12;
-int startMinute = 22;
-int startSecond = 20;
-
-long lastMillis = 0;
-long totalSeconds = 0;
+int brightness = 100;
+bool buttonPressed = false;
 
 byte smiley[8] = {
     0b00000,
@@ -60,51 +61,6 @@ byte tot[8] = {
     0b01110,
     0b10001};
 
-void setup()
-{
-  Serial.begin(115200);
-  Wire.begin();
-
-  if (!ens160.begin())
-  {
-    Serial.println("ENS160: Hat nicht geantwortet.");
-    while (1)
-      ;
-  }
-
-  if (!bme280.beginI2C())
-  {
-    Serial.println("BME280: Hat nicht geantwortet.");
-    while (1)
-      ;
-  }
-
-  if (buzzer.begin() == false)
-  {
-    Serial.println("Buzzer Hat nicht geantwortet.");
-    while (1)
-      ;
-  }
-
-  if (ens160.setOperatingMode(SFE_ENS160_RESET))
-    Serial.println("Ready.");
-
-  ens160.setOperatingMode(SFE_ENS160_STANDARD);
-
-  Wire1.begin();
-  lcd.begin(Wire1);
-  lcd.setAddress(0x72);
-  lcd.clear();
-  lcd.setContrast(50);
-
-  lcd.createChar(0, smiley);
-  lcd.createChar(1, neutral);
-  lcd.createChar(2, frownie);
-  lcd.createChar(3, tot);
-
-  totalSeconds = startHour * 3600 + startMinute * 60 + startSecond;
-}
-
 void printTemp()
 {
   lcd.setCursor(0, 1);
@@ -112,6 +68,9 @@ void printTemp()
   lcd.print(temp, 2);
   lcd.println(" C");
   delay(200);
+
+  Serial.print("Temp: ");
+  Serial.println(temp);
 }
 
 void printCO2()
@@ -142,54 +101,112 @@ void printCO2()
   {
     lcd.writeChar(2);
   }
+
+  Serial.print("CO2: ");
+  Serial.println(ppm);
 }
 
-void buzzshort()
+void buzz()
 {
-  buzzer.on();
-  delay(1000);
-  buzzer.off();
-  delay(1000);
+
+  if ((ppm > 700) || (temp > 30))
+  {
+    if (!buttonPressed)
+    {
+      button.LEDoff();
+      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_LOW);
+      buzzer.on();
+      printCO2();
+      printTemp();
+    }
+    else
+    {
+      buttonPressed = true;
+      button.LEDon(brightness);
+      buzzer.off();
+    }
+  }
 }
 
-void buzzlong()
+void getTimeAndDate()
 {
-  buzzer.on();
-  delay(2000);
-  buzzer.off();
-  delay(1000);
+  Serial.print(CP_getHourAsString());
+  Serial.print(":");
+  Serial.print(CP_getMinuteAsString());
+  Serial.print(":");
+  Serial.println(CP_getSecondAsString());
+
+  Serial.print(CP_getDayAsString());
+  Serial.print(".");
+  Serial.print(CP_getMonthAsString());
+  Serial.print(".");
+  Serial.println(CP_getYearAsString());
+  Serial.println("");
+}
+
+void setup()
+{
+
+  Serial.begin(115200);
+  CP_init(0);
+  Wire.begin();
+
+  if (!ens160.begin())
+  {
+    Serial.println("ENS160 Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
+
+  if (!bme280.beginI2C())
+  {
+    Serial.println("BME280 Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
+
+  if (buzzer.begin() == false)
+  {
+    Serial.println("Buzzer Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
+
+  if (button.begin() == false)
+  {
+    Serial.println("Button hat nicht geantwortet.");
+    while (1)
+      ;
+  }
+
+  if (ens160.setOperatingMode(SFE_ENS160_RESET))
+    Serial.println("Ready.");
+
+  ens160.setOperatingMode(SFE_ENS160_STANDARD);
+
+  Wire1.begin();
+  lcd.begin(Wire1);
+  lcd.setAddress(0x72);
+  lcd.clear();
+  lcd.setContrast(50);
+
+  lcd.createChar(0, smiley);
+  lcd.createChar(1, neutral);
+  lcd.createChar(2, frownie);
+  lcd.createChar(3, tot);
+
+  button.LEDoff();
 }
 
 void loop()
 {
+  // getTimeAndDate();
+
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
-
   printCO2();
   printTemp();
-  delay(200);
 
-  if (ppm > 700)
-  {
-    buzzshort();
-  }
 
-  if (ppm > 1000)
-  {
-    buzzlong();
-  }
-
-  long currentMillis = millis();
-
-  if (currentMillis - lastMillis >= 1000)
-  {
-    lastMillis = currentMillis;
-    totalSeconds++;
-
-    int hours = (totalSeconds / 3600) % 24;
-    int minutes = (totalSeconds / 60) % 60;
-    int seconds = totalSeconds % 60;
-
-    Serial.printf("%02d:%02d:%02d\n", hours, minutes, seconds);
-  }
+  buzz();
 }
