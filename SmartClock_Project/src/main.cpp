@@ -101,9 +101,6 @@ void printCO2()
   {
     lcd.writeChar(2);
   }
-
-  Serial.print("CO2: ");
-  Serial.println(ppm);
 }
 
 void buzz()
@@ -206,7 +203,6 @@ void loop()
   temp = bme280.readTempC() - tempDiff;
   printCO2();
   printTemp();
-
 
   buzz();
 }
