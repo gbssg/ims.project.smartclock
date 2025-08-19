@@ -8,18 +8,22 @@
 #include <time.h>
 #include <ClockProvider.h>
 #include <SparkFun_Qwiic_Button.h>
+#include <SimpleSoftTimer.h>
 
+using namespace HolisticSolutions;
+
+int ppm;
+int tempDiff = 4;
+float temp;
+int brightness = 100;
+
+ESP32Time rtc;
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
-static ESP32Time rtc;
-int ppm;
-int tempDiff = 4;
-float temp;
-int brightness = 100;
-bool buttonPressed = false;
+SimpleSoftTimer heatDisplaytimer(200);
 
 byte smiley[8] = {
     0b00000,
@@ -66,11 +70,7 @@ void printTemp()
   lcd.setCursor(0, 1);
   lcd.print("Temp: ");
   lcd.print(temp, 2);
-  lcd.println(" C");
-  delay(200);
-
-  Serial.print("Temp: ");
-  Serial.println(temp);
+  lcd.println(" C   ");
 }
 
 void printCO2()
@@ -108,7 +108,7 @@ void buzz()
 
   if ((ppm > 700) || (temp > 30))
   {
-    if (!buttonPressed)
+    if (!button.hasBeenClicked())
     {
       button.LEDoff();
       buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_LOW);
@@ -116,12 +116,10 @@ void buzz()
       printCO2();
       printTemp();
     }
-    else
-    {
-      buttonPressed = true;
-      button.LEDon(brightness);
-      buzzer.off();
-    }
+  }
+  else if (button.hasBeenClicked())
+  {
+    button.clearEventBits();
   }
 }
 
@@ -202,7 +200,19 @@ void loop()
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
   printCO2();
+  heatDisplaytimer.start(200);
+  heatDisplaytimer.isTimeout();
+
   printTemp();
 
   buzz();
+
+  if (button.isPressed())
+  {
+    button.LEDon(brightness);
+  }
+  else
+  {
+    button.LEDoff();
+  }
 }
