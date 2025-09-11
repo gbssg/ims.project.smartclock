@@ -9,6 +9,7 @@
 #include <ClockProvider.h>
 #include <SparkFun_Qwiic_Button.h>
 #include <SimpleSoftTimer.h>
+#include "LCD.h"
 
 using namespace HolisticSolutions;
 
@@ -16,14 +17,16 @@ int ppm;
 int tempDiff = 4;
 float temp;
 int brightness = 100;
-
+int highPPM = 1000;
+int midPPM = 700;
+int highTemp = 28;
 ESP32Time rtc;
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
-SimpleSoftTimer heatDisplaytimer(200);
+// SimpleSoftTimer heatDisplaytimer(200);
 
 byte smiley[8] = {
     0b00000,
@@ -76,12 +79,12 @@ void printTemp()
 void printCO2()
 {
   lcd.setCursor(0, 0);
-  if (ppm > 1000)
+  if (ppm > highPPM)
   {
 
     lcd.print("CO2 : ");
   }
-  else if (ppm <= 1000)
+  else if (ppm <= highPPM)
   {
     lcd.print("CO2 :  ");
   }
@@ -89,15 +92,15 @@ void printCO2()
   lcd.print(ppm);
   lcd.print(" ppm");
   lcd.setCursor(15, 0);
-  if (ppm <= 600)
+  if (ppm <= midPPM)
   {
     lcd.writeChar(0);
   }
-  else if (ppm <= 1000)
+  else if (ppm <= highPPM)
   {
     lcd.writeChar(1);
   }
-  else if (ppm > 1000)
+  else if (ppm > highPPM)
   {
     lcd.writeChar(2);
   }
@@ -106,7 +109,7 @@ void printCO2()
 void buzz()
 {
 
-  if ((ppm > 700) || (temp > 30))
+  if ((ppm > midPPM) || (temp > highTemp))
   {
     if (!button.hasBeenClicked())
     {
@@ -123,7 +126,7 @@ void buzz()
   }
 }
 
-void getTimeAndDate()
+void CP_getTimeAndDate()
 {
   Serial.print(CP_getHourAsString());
   Serial.print(":");
@@ -195,14 +198,11 @@ void setup()
 
 void loop()
 {
-  // getTimeAndDate();
+  // CP_getTimeAndDate();
 
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
   printCO2();
-  heatDisplaytimer.start(200);
-  heatDisplaytimer.isTimeout();
-
   printTemp();
 
   buzz();
