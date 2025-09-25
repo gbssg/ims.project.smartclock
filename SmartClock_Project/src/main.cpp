@@ -107,7 +107,7 @@ void printCO2()
   }
 }
 
-void buzz()
+void warnBuzz()
 {
   if(ppm > midPPM)
   {
@@ -211,7 +211,7 @@ void loop()
   printCO2();
   printTemp();
 
-  buzz();
+  warnBuzz();
 
   if (button.isPressed())
   {
