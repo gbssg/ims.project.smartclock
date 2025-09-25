@@ -18,8 +18,9 @@ int tempDiff = 4;
 float temp;
 int brightness = 100;
 int highPPM = 1000;
-int midPPM = 700;
+int midPPM = 800;
 int highTemp = 28;
+bool buzzerMuted = false;
 ESP32Time rtc;
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
@@ -108,20 +109,26 @@ void printCO2()
 
 void buzz()
 {
-
-  if ((ppm > midPPM) || (temp > highTemp))
+  if(ppm > midPPM)
   {
-    if (!button.hasBeenClicked())
+    if(!buzzerMuted)
     {
       button.LEDoff();
-      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_LOW);
+      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
       printCO2();
       printTemp();
     }
+    
+    if (button.hasBeenClicked())
+    {
+      buzzer.off();
+      buzzerMuted = true;
+    }
   }
-  else if (button.hasBeenClicked())
+  else if (ppm < (midPPM - 100))
   {
+    buzzerMuted = false;
     button.clearEventBits();
   }
 }
@@ -198,7 +205,7 @@ void setup()
 
 void loop()
 {
-  // CP_getTimeAndDate();
+  CP_getTimeAndDate();
 
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
@@ -214,5 +221,5 @@ void loop()
   else
   {
     button.LEDoff();
-  }
+  } 
 }
