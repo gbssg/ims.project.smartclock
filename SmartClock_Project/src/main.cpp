@@ -120,7 +120,7 @@ void buzz()
       printTemp();
     }
     
-    if (button.hasBeenClicked())
+    if (button.isPressed())
     {
       buzzer.off();
       buzzerMuted = true;
@@ -129,7 +129,6 @@ void buzz()
   else if (ppm < (midPPM - 100))
   {
     buzzerMuted = false;
-    button.clearEventBits();
   }
 }
 
