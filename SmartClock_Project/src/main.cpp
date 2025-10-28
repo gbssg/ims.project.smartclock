@@ -6,29 +6,33 @@
 #include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
 #include <ESP32Time.h>
 #include <time.h>
-#include <ClockProvider.h>
 #include <SparkFun_Qwiic_Button.h>
 #include <SimpleSoftTimer.h>
 #include "LCD.h"
+#include <Network.h>
 
 using namespace HolisticSolutions;
 
+// Variabeln definieren
 int ppm;
-int tempDiff = 4;
+int tempDiff = 5;
 float temp;
 int brightness = 100;
 int highPPM = 1000;
 int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
+
+// Objekte erstellen
 ESP32Time rtc;
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
-// SimpleSoftTimer heatDisplaytimer(200);
+SimpleSoftTimer displayTime(1000);
 
+// Smiley Symbole für das LCD Display
 byte smiley[8] = {
     0b00000,
     0b00000,
@@ -39,6 +43,7 @@ byte smiley[8] = {
     0b01110,
     0b00000};
 
+// Neutraler Smiley für das LCD Display
 byte neutral[8] = {
     0b00000,
     0b00000,
@@ -48,7 +53,8 @@ byte neutral[8] = {
     0b11111,
     0b00000,
     0b00000};
-
+    
+// Frownie Smiley für das LCD Display
 byte frownie[8] = {
     0b00000,
     0b00000,
@@ -59,6 +65,7 @@ byte frownie[8] = {
     0b01110,
     0b10001};
 
+// Totenkopf Smiley für das LCD Display
 byte tot[8] = {
     0b00000,
     0b00000,
@@ -69,6 +76,7 @@ byte tot[8] = {
     0b01110,
     0b10001};
 
+// Funktion für die Anzeige der Temperatur
 void printTemp()
 {
   lcd.setCursor(0, 1);
@@ -77,6 +85,7 @@ void printTemp()
   lcd.println(" C   ");
 }
 
+// Funktion für die Anzeige des CO2 Werts
 void printCO2()
 {
   lcd.setCursor(0, 0);
@@ -107,6 +116,7 @@ void printCO2()
   }
 }
 
+// Funktion für das Warnsignal des Buzzers
 void warnBuzz()
 {
   if(ppm > midPPM)
@@ -132,29 +142,15 @@ void warnBuzz()
   }
 }
 
-void CP_getTimeAndDate()
-{
-  Serial.print(CP_getHourAsString());
-  Serial.print(":");
-  Serial.print(CP_getMinuteAsString());
-  Serial.print(":");
-  Serial.println(CP_getSecondAsString());
 
-  Serial.print(CP_getDayAsString());
-  Serial.print(".");
-  Serial.print(CP_getMonthAsString());
-  Serial.print(".");
-  Serial.println(CP_getYearAsString());
-  Serial.println("");
-}
 
+// Setup Funktion
 void setup()
 {
-
   Serial.begin(115200);
-  CP_init(0);
   Wire.begin();
-
+  displayTime.start(1000);
+  connectWifi();
   if (!ens160.begin())
   {
     Serial.println("ENS160 Hat nicht geantwortet.");
@@ -202,17 +198,20 @@ void setup()
   button.LEDoff();
 }
 
+// Loop Funktion
 void loop()
 {
-  CP_getTimeAndDate();
 
+  // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
   printCO2();
   printTemp();
 
+  // Buzzer Funktion aufrufen
   warnBuzz();
 
+  // LED vom Button steuern
   if (button.isPressed())
   {
     button.LEDon(brightness);
@@ -221,4 +220,6 @@ void loop()
   {
     button.LEDoff();
   } 
+
+
 }
