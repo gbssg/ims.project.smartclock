@@ -10,7 +10,10 @@
 #include <SimpleSoftTimer.h>
 #include "LCD.h"
 #include <Network.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
+#define UTC_OFFSET_SECONDS 3600 // UTC+1
 using namespace HolisticSolutions;
 
 // Variabeln definieren
@@ -22,6 +25,9 @@ int highPPM = 1000;
 int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
+
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
 
 // Objekte erstellen
 ESP32Time rtc;
@@ -201,6 +207,9 @@ void setup()
 // Loop Funktion
 void loop()
 {
+  timeClient.begin();
+  timeClient.update();
+
 
   // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
@@ -218,8 +227,9 @@ void loop()
   }
   else
   {
-    button.LEDoff();
-  } 
+    button.LEDoff(); 
+  }
 
+  Serial.println(timeClient.getFormattedTime());
 
 }
