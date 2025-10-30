@@ -26,6 +26,7 @@ int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
 
+
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
 
@@ -231,5 +232,6 @@ void loop()
   }
 
   Serial.println(timeClient.getFormattedTime());
+  Serial.println(timeClient.getFormattedDate());
 
 }
