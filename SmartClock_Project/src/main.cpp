@@ -231,7 +231,10 @@ void loop()
     button.LEDoff(); 
   }
 
+  if (displayTime.isTimeout()) {
   Serial.println(timeClient.getFormattedTime());
-  Serial.println(timeClient.getFormattedDate());
+  Serial.println(timeClient.getFormattedDate());    
+  displayTime.restart();
+}
 
 }
