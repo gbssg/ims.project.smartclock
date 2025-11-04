@@ -190,7 +190,7 @@ String NTPClient::getFormattedDate(unsigned long secs) {
   }
   String monthStr = ++month < 10 ? "0" + String(month) : String(month); // jan is month 1  
   String dayStr = ++rawTime < 10 ? "0" + String(rawTime) : String(rawTime); // day of month  
-  return dayStr + "." + monthStr + "." + String(year);
+  return dayStr + "." + monthStr + "." + String(year % 100);
 }
 
 void NTPClient::end() {

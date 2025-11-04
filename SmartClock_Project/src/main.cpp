@@ -81,18 +81,29 @@ byte tot[8] = {
     0b10001};
 
 // Funktion für die Anzeige der Temperatur
-void printTemp()
+
+void printTimeAndDate()
 {
+  lcd.setCursor(0, 0);
+  lcd.print("Time:   ");
+  lcd.print(timeClient.getFormattedTime());
+
+  lcd.setCursor(0, 1);
+  lcd.print("Date:   ");
+  lcd.print(timeClient.getFormattedDate());
+}
+
+// Funktion für die Anzeige von der Temperatur und vom CO2-Gehalt
+void printTempAndCO2()
+{
+  // printTemp
   lcd.setCursor(0, 1);
   lcd.print("Temp: ");
   lcd.print(temp, 2);
   lcd.println(" C   ");
-}
 
-// Funktion für die Anzeige des CO2 Werts
-void printCO2()
-{
-  lcd.setCursor(0, 0);
+  // printCO2
+    lcd.setCursor(0, 0);
   if (ppm > highPPM)
   {
 
@@ -130,8 +141,7 @@ void warnBuzz()
       button.LEDoff();
       buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
-      printCO2();
-      printTemp();
+      printTempAndCO2();
     }
     
     if (button.isPressed())
@@ -212,8 +222,7 @@ void loop()
   // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
-  printCO2();
-  printTemp();
+  printTempAndCO2();
 
   // Buzzer Funktion aufrufen
   warnBuzz();
@@ -229,9 +238,8 @@ void loop()
   }
 
   if (displayTime.isTimeout()) {
-  Serial.println(timeClient.getFormattedTime());
-  Serial.println(timeClient.getFormattedDate());    
   displayTime.restart();
-}
+ }
 
+ 
 }
