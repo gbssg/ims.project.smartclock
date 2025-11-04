@@ -23,7 +23,13 @@ int highPPM = 1000;
 int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
-
+bool buzzerBuzzing = true;
+enum menuState 
+{
+  CLOCK_STATE,
+  AIR_QUALITY_STATE
+};
+menuState currentState;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
@@ -102,32 +108,28 @@ void printTempAndCO2()
   lcd.print(temp, 2);
   lcd.println(" C   ");
 
-  // printCO2
-    lcd.setCursor(0, 0);
-  if (ppm > highPPM)
+  // V2
+  lcd.setCursor(0,0);
+  if (ppm >= highPPM)
   {
-
     lcd.print("CO2 : ");
+    lcd.print(ppm);
+    lcd.print(" ppm ");
+    lcd.writeChar(2);
   }
-  else if (ppm <= highPPM)
+  else if (ppm < highPPM && ppm > midPPM )
   {
     lcd.print("CO2 :  ");
-  }
-
-  lcd.print(ppm);
-  lcd.print(" ppm");
-  lcd.setCursor(15, 0);
-  if (ppm <= midPPM)
-  {
-    lcd.writeChar(0);
-  }
-  else if (ppm <= highPPM)
-  {
+    lcd.print(ppm);
+    lcd.print(" ppm ");
     lcd.writeChar(1);
   }
-  else if (ppm > highPPM)
+  else if (ppm <= midPPM)
   {
-    lcd.writeChar(2);
+    lcd.print("CO2 :  ");
+    lcd.print(ppm);
+    lcd.print(" ppm ");
+    lcd.writeChar(0);
   }
 }
 
@@ -138,6 +140,7 @@ void warnBuzz()
   {
     if(!buzzerMuted)
     {
+      buzzerBuzzing = true;
       button.LEDoff();
       buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
@@ -147,15 +150,54 @@ void warnBuzz()
     if (button.isPressed())
     {
       buzzer.off();
+      buzzerBuzzing = false;
       buzzerMuted = true;
     }
   }
   else if (ppm < (midPPM - 100))
   {
+    buzzerBuzzing = false;
     buzzerMuted = false;
   }
 }
 
+void changeMenu()
+{  
+   switch (currentState) {
+    case CLOCK_STATE:
+    {
+      if (button.hasBeenClicked())
+      {
+        currentState = AIR_QUALITY_STATE;
+        button.clearEventBits();
+      }
+
+      if (displayTime.isTimeout()) 
+      {
+        printTimeAndDate();
+        displayTime.restart();
+      }
+      
+      break;
+    }
+    case AIR_QUALITY_STATE:
+    {
+      if (button.hasBeenClicked() && buzzerBuzzing == false)
+      {
+        currentState = CLOCK_STATE;
+        button.clearEventBits();
+      }
+
+      if (displayTime.isTimeout()) 
+      {    
+        printTempAndCO2();
+        displayTime.restart();
+      }
+
+      break;
+    }
+   }
+} 
 
 
 // Setup Funktion
@@ -165,6 +207,8 @@ void setup()
   Wire.begin();
   displayTime.start(1000);
   connectWifi();
+  timeClient.begin();
+
   if (!ens160.begin())
   {
     Serial.println("ENS160 Hat nicht geantwortet.");
@@ -215,18 +259,17 @@ void setup()
 // Loop Funktion
 void loop()
 {
-  timeClient.begin();
   timeClient.update();
-
-
   // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
-  printTempAndCO2();
 
+  // Menü-Funktion aufrufen
+  changeMenu();
+  
   // Buzzer Funktion aufrufen
   warnBuzz();
-
+  
   // LED vom Button steuern
   if (button.isPressed())
   {
@@ -237,9 +280,4 @@ void loop()
     button.LEDoff(); 
   }
 
-  if (displayTime.isTimeout()) {
-  displayTime.restart();
- }
-
- 
 }
