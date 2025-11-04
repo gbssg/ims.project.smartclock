@@ -4,8 +4,6 @@
 #include <SparkFun_Qwiic_OLED.h>
 #include <SerLCD.h>
 #include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
-#include <ESP32Time.h>
-#include <time.h>
 #include <SparkFun_Qwiic_Button.h>
 #include <SimpleSoftTimer.h>
 #include "LCD.h"
@@ -31,7 +29,6 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
 
 // Objekte erstellen
-ESP32Time rtc;
 QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
