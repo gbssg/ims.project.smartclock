@@ -28,12 +28,13 @@ int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
 bool buzzerBuzzing = true;
-enum menuState 
+enum menuState
 {
   CLOCK_STATE,
-  AIR_QUALITY_STATE
-};
-menuState currentState;
+  AIR_QUALITY_STATE,
+  TIMER_STATE
+  };
+  menuState currentState;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
@@ -45,8 +46,6 @@ BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
 SimpleSoftTimer displayTime(100);
-
-
 
 // Setup Funktion
 void setup()
@@ -114,5 +113,5 @@ void loop()
   printTempAndCO2();
 
   // LED vom Button steuern
-  !button.isPressed() ? button.LEDoff() : button.LEDon(brightness);
+  button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
 }

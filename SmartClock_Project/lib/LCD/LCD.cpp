@@ -81,6 +81,8 @@ void lcdSetup()
 // Funktion für die Anzeige von der Zeit und vom Datum
 void printTimeAndDate()
 {
+  if (displayTime.isTimeout())
+  {
   lcd.setCursor(0, 0);
   lcd.print("Time:   ");
   lcd.print(timeClient.getFormattedTime());
@@ -88,6 +90,8 @@ void printTimeAndDate()
   lcd.setCursor(0, 1);
   lcd.print("Date:   ");
   lcd.print(timeClient.getFormattedDate());
+  displayTime.restart();
+  }
 }
 
 // Funktion für die Anzeige von der Temperatur und vom CO2-Gehalt
@@ -124,6 +128,6 @@ void printTempAndCO2()
       lcd.print(" ppm ");
       lcd.writeChar(0);
     }      
-    displayTime.restart();
+  displayTime.restart();
   }
 }

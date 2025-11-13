@@ -8,7 +8,8 @@ extern bool buzzerBuzzing;
 enum menuState
 {
   CLOCK_STATE,
-  AIR_QUALITY_STATE
+  AIR_QUALITY_STATE,
+  TIMER_STATE
 };
 
 extern bool buttonRelease;
@@ -16,56 +17,56 @@ extern SimpleSoftTimer displayTime;
 extern QwiicButton button;
 extern menuState currentState;
 
+void buttonReleaseHandler()
+{
+  if (!button.isPressedQueueEmpty() && buttonRelease == true)
+  {
+    buttonRelease = !buttonRelease;
+    button.popPressedQueue();
+  }
+}
+
+void handleMenuChange(menuState newState)
+{
+  if (!button.isPressedQueueEmpty() && buttonRelease == false)
+  {
+    currentState = newState;
+    buttonRelease = !buttonRelease;
+    button.popPressedQueue();
+  }
+}
+
 void changeMenu()
 {  
    switch (currentState) {
     case CLOCK_STATE:
     {
-      if (!button.isPressedQueueEmpty() && buttonRelease == false)
-      {
-        Serial.println("Button down 1");
-        currentState = AIR_QUALITY_STATE;
-        buttonRelease = !buttonRelease;
-        button.popPressedQueue();
-      }
-      else if (!button.isPressedQueueEmpty() && buttonRelease == true)
-      {
-        Serial.println("Button up 1");
-        buttonRelease = !buttonRelease;
-        button.popPressedQueue();
-      }
+      handleMenuChange(AIR_QUALITY_STATE);
+      buttonReleaseHandler();
 
-      if (displayTime.isTimeout()) 
-      {
-        printTimeAndDate();
-        displayTime.restart();
-      }
-      
+      printTimeAndDate();
       break;
     }
+
     case AIR_QUALITY_STATE:
     {
-      if (!button.isPressedQueueEmpty() && buttonRelease == false)
-      {
-        Serial.println("Button down 2");
-        currentState = CLOCK_STATE;
-        buttonRelease = !buttonRelease;
-        button.popPressedQueue();
-      }
-      else if (!button.isPressedQueueEmpty() && buttonRelease == true)
-      {
-        Serial.println("Button up 2");
-        buttonRelease = !buttonRelease;
-        button.popPressedQueue();
-      }
+      handleMenuChange(CLOCK_STATE);
+      buttonReleaseHandler();
 
-      if (displayTime.isTimeout()) 
-      {    
-        printTempAndCO2();
-        displayTime.restart();
-      }
-
+      printTempAndCO2();
       break;
     }
+
+    /*
+    case TIMER_STATE:
+    {
+      handleMenuChange(CLOCK_STATE);
+      buttonReleaseHandler();
+      break;
+    }
+    */
+   
    }
 } 
+
+
