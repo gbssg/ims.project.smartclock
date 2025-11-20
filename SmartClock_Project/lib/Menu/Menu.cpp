@@ -36,7 +36,7 @@ void handleMenuChange(menuState newState)
   }
 }
 
-void changeMenu()
+void manageMenu()
 {  
    switch (currentState) {
     case CLOCK_STATE:

@@ -25,7 +25,6 @@ void warnBuzz()
     if(!buzzerMuted)
     {
       buzzerBuzzing = true;
-      button.LEDoff();
       buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
       printTempAndCO2();

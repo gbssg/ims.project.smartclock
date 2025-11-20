@@ -5,7 +5,7 @@
 
 int wifiTryCount = 0;
 
-
+// Funktion für die Verbindung mit dem WLAN
 void connectWifi()
 {
     wifiTryCount = 0;

@@ -10,7 +10,6 @@
 #include <Network.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
-#include <Sensor.h>
 #include <Menu.h>
 #include <Buzzer.h>
 
@@ -104,7 +103,7 @@ void loop()
   temp = bme280.readTempC() - tempDiff;
 
   // Menü-Funktion aufrufen
-  changeMenu();
+  manageMenu();
   
   // Buzzer Funktion aufrufen
   warnBuzz();

@@ -6,7 +6,7 @@
 
 using namespace HolisticSolutions;
 
-void changeMenu();
+void manageMenu();
 
 void handleMenuChange();
 
