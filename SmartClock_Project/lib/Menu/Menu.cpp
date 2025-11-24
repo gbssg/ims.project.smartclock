@@ -4,7 +4,6 @@
 
 using namespace HolisticSolutions;
 
-extern bool buzzerBuzzing;
 enum menuState
 {
   CLOCK_STATE,
@@ -12,11 +11,14 @@ enum menuState
   TIMER_STATE
 };
 
+extern bool buzzerBuzzing;
+
 extern bool buttonRelease;
 extern SimpleSoftTimer displayTime;
 extern QwiicButton button;
 extern menuState currentState;
 
+// Funktion zum Verwalten des Menüs basierend auf dem aktuellen Zustand
 void buttonReleaseHandler()
 {
   if (!button.isPressedQueueEmpty() && buttonRelease == true)
@@ -26,6 +28,7 @@ void buttonReleaseHandler()
   }
 }
 
+// Funktion zum Ändern des Menüzustands bei Tastendruck
 void handleMenuChange(menuState newState)
 {
   if (!button.isPressedQueueEmpty() && buttonRelease == false)
@@ -36,6 +39,7 @@ void handleMenuChange(menuState newState)
   }
 }
 
+// Hauptfunktion zum Verwalten des Menüs
 void manageMenu()
 {  
    switch (currentState) {
