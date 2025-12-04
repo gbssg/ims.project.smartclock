@@ -1,6 +1,7 @@
 #include <SparkFun_Qwiic_Button.h>
 #include <LCD.h>
 #include <SimpleSoftTimer.h>
+# 
 
 using namespace HolisticSolutions;
 
@@ -49,27 +50,32 @@ void manageMenu()
       buttonReleaseHandler();
 
       printTimeAndDate();
+      Serial.println("Time and Date Menu");
       break;
     }
 
     case AIR_QUALITY_STATE:
     {
-      handleMenuChange(CLOCK_STATE);
+      handleMenuChange(TIMER_STATE);
       buttonReleaseHandler();
 
       printTempAndCO2();
+      Serial.println("Air Quality Menu");
       break;
     }
-
-    /*
+    
     case TIMER_STATE:
     {
+      if (displayTime.isTimeout()) 
+        {
+          lcd.clear();
+        }
       handleMenuChange(CLOCK_STATE);
       buttonReleaseHandler();
-      break;
+
+      readAxes();
+      Serial.println("Timer Menu (Read Axes)");
     }
-    */
-   
    }
 } 
 

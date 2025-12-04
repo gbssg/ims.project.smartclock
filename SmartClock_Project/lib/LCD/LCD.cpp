@@ -18,6 +18,8 @@ extern int ppm;
 extern float temp;
 extern int highPPM;
 extern int midPPM;
+extern int readAxisY;
+extern int readAxisX;
 
 // Smiley Symbole für das LCD Display
 byte smiley[8] = {
@@ -101,7 +103,7 @@ void printTempAndCO2()
   {
     // printTemp
     lcd.setCursor(0, 1);
-    lcd.print("Temp: ");
+    lcd.print("Temp:  ");
     lcd.print(temp, 2);
     lcd.println(" C   ");
 
@@ -129,5 +131,19 @@ void printTempAndCO2()
       lcd.writeChar(0);
     }      
   displayTime.restart();
+  }
+}
+
+void readAxes()
+{
+  if (displayTime.isTimeout()) 
+  {
+    lcd.setCursor(0,0);
+    lcd.print("Y-Axis: ");
+    lcd.print(readAxisY);
+    lcd.setCursor(0,1);
+    lcd.print("X-Axis: ");
+    lcd.println(readAxisX);
+    displayTime.restart();
   }
 }

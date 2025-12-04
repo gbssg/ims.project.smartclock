@@ -14,6 +14,10 @@
 #include <Buzzer.h>
 
 #define UTC_OFFSET_SECONDS 3600 // UTC+1
+
+#define JoyStick_Y_Pin A0
+#define JoyStick_X_Pin A1
+
 using namespace HolisticSolutions;
 
 // Variabeln definieren
@@ -27,13 +31,19 @@ int midPPM = 800;
 int highTemp = 28;
 bool buzzerMuted = false;
 bool buzzerBuzzing = true;
+int readAxisY;
+int readAxisX;
+int runThrough = 0;
 enum menuState
 {
   CLOCK_STATE,
   AIR_QUALITY_STATE,
   TIMER_STATE
-  };
-  menuState currentState;
+};
+
+menuState currentState;
+menuState lastState = CLOCK_STATE;
+bool displayCleared = false;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
@@ -49,11 +59,15 @@ SimpleSoftTimer displayTime(100);
 // Setup Funktion
 void setup()
 {
+  pinMode(JoyStick_X_Pin, INPUT);
+  pinMode(JoyStick_Y_Pin, INPUT);
+
   Serial.begin(115200);
   Wire.begin();
   displayTime.start(100);
   connectWifi();
   timeClient.begin();
+  analogReadResolution(10);
 
   if (!ens160.begin())
   {
@@ -95,10 +109,14 @@ void setup()
 // Loop Funktion
 void loop()
 {
+  // Joystick Werte einlesen
+  readAxisY = analogRead(JoyStick_Y_Pin);
+  readAxisX = analogRead(JoyStick_X_Pin);
+
   // NTP Client updaten
   timeClient.update();
   
-  // CO2 Wert und Temperatur auslesen
+  // CO2 Wert und Temperatur auslesend
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
 
@@ -113,4 +131,5 @@ void loop()
 
   // LED vom Button steuern
   button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
+
 }

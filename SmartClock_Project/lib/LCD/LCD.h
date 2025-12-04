@@ -21,9 +21,16 @@ extern int ppm;
 extern float temp;
 extern int highPPM;
 extern int midPPM;
+extern int readAxisY;
+extern int readAxisX;
+
 
 void lcdSetup();
 
 void printTimeAndDate();
 
 void printTempAndCO2();
+
+void readAxes();
+
+void clearDisplay();
