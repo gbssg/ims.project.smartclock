@@ -33,7 +33,17 @@ bool buzzerMuted = false;
 bool buzzerBuzzing = true;
 int readAxisY;
 int readAxisX;
-int runThrough = 0;
+int upRight = 75;
+int downLeft = 25;
+int hour;
+int minute;
+int second;
+int arrowPosition = 14;
+
+String hourStr = hour < 10 ? "0" + String(hour) : String(hour);
+String minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
+String secondStr = second < 10 ? "0" + String(second) : String(second);
+
 enum menuState
 {
   CLOCK_STATE,
@@ -67,7 +77,7 @@ void setup()
   displayTime.start(100);
   connectWifi();
   timeClient.begin();
-  analogReadResolution(10);
+  analogReadResolution(7);
 
   if (!ens160.begin())
   {
@@ -109,6 +119,7 @@ void setup()
 // Loop Funktion
 void loop()
 {
+
   // Joystick Werte einlesen
   readAxisY = analogRead(JoyStick_Y_Pin);
   readAxisX = analogRead(JoyStick_X_Pin);
@@ -116,7 +127,7 @@ void loop()
   // NTP Client updaten
   timeClient.update();
   
-  // CO2 Wert und Temperatur auslesend
+  // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
 
@@ -131,5 +142,8 @@ void loop()
 
   // LED vom Button steuern
   button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
+
+  // readAxes();
+
 
 }

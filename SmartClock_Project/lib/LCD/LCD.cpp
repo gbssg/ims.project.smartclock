@@ -21,7 +21,7 @@ extern int midPPM;
 extern int readAxisY;
 extern int readAxisX;
 
-// Smiley Symbole für das LCD Display
+// Smiley Symbole für das LCD 
 byte smiley[8] = {
     0b00000,
     0b00000,
@@ -32,7 +32,7 @@ byte smiley[8] = {
     0b01110,
     0b00000};
 
-// Neutraler Smiley für das LCD Display
+// Neutraler Smiley für das LCD 
 byte neutral[8] = {
     0b00000,
     0b00000,
@@ -43,7 +43,7 @@ byte neutral[8] = {
     0b00000,
     0b00000};
     
-// Frownie Smiley für das LCD Display
+// Frownie Smiley für das LCD 
 byte frownie[8] = {
     0b00000,
     0b00000,
@@ -54,8 +54,8 @@ byte frownie[8] = {
     0b01110,
     0b10001};
 
-// Totenkopf Smiley für das LCD Display
-byte tot[8] = {
+// Totenkopf Smiley für das LCD 
+byte death[8] = {
     0b00000,
     0b00000,
     0b10101,
@@ -65,7 +65,19 @@ byte tot[8] = {
     0b01110,
     0b10001};
 
-// Funktion für die Initialisierung des LCD Displays
+// Pfeil Symbol für das LCD 
+byte arrow[8] = {
+    0b00100,
+    0b01110,
+    0b11111,
+    0b00100,
+    0b00100,
+    0b00100,
+    0b00100,
+    0b00000 
+};
+
+// Funktion für die Initialisierung des LCD 
 void lcdSetup()
 {
   Wire1.begin();
@@ -77,7 +89,8 @@ void lcdSetup()
   lcd.createChar(0, smiley);
   lcd.createChar(1, neutral);
   lcd.createChar(2, frownie);
-  lcd.createChar(3, tot);
+  lcd.createChar(3, death);
+  lcd.createChar(4, arrow);
 }
 
 // Funktion für die Anzeige von der Zeit und vom Datum
@@ -138,12 +151,10 @@ void readAxes()
 {
   if (displayTime.isTimeout()) 
   {
-    lcd.setCursor(0,0);
-    lcd.print("Y-Axis: ");
-    lcd.print(readAxisY);
-    lcd.setCursor(0,1);
-    lcd.print("X-Axis: ");
-    lcd.println(readAxisX);
+    Serial.print("Y-Axis: ");
+    Serial.println(readAxisY);
+    Serial.print("X-Axis: ");
+    Serial.println(readAxisX);
     displayTime.restart();
   }
 }
