@@ -3,7 +3,6 @@
 #include <SimpleSoftTimer.h>
 #include <Timer.h>
 
-
 using namespace HolisticSolutions;
 
 enum menuState
@@ -16,11 +15,10 @@ enum menuState
 extern bool buzzerBuzzing;
 
 extern bool buttonRelease;
-extern SimpleSoftTimer displayTime;
+extern SimpleSoftTimer displayTimer;
 extern QwiicButton button;
 extern menuState currentState;
 extern menuState lastState;
-
 
 // Funktion zum Verwalten des Menüs basierend auf dem aktuellen Zustand
 void buttonReleaseHandler()
@@ -46,7 +44,8 @@ void handleMenuChange(menuState newState)
 // Funktiom um die Anzeige, einmal pro wechseln zu reinigen
 void clearDisplayOnce()
 {
-    if (lastState != currentState) {
+  if (lastState != currentState)
+  {
     lcd.clear();
     Serial.println("LCD Cleared once");
     lastState = currentState;
@@ -55,46 +54,41 @@ void clearDisplayOnce()
 
 // Hauptfunktion zum Verwalten des Menüs
 void manageMenu()
-{  
-  
-
-  
-  switch (currentState) {
-   case CLOCK_STATE:
-   {
-    
+{
+  switch (currentState)
+  {
+  case CLOCK_STATE:
+  {
     handleMenuChange(AIR_QUALITY_STATE);
     buttonReleaseHandler();
 
     clearDisplayOnce();
     printTimeAndDate();
-    Serial.println("Clock_State");
+    // Serial.println("Clock_State");
     break;
-   }
+  }
 
-   case AIR_QUALITY_STATE:
-   {
+  case AIR_QUALITY_STATE:
+  {
     handleMenuChange(TIMER_STATE);
     buttonReleaseHandler();
 
     clearDisplayOnce();
     printTempAndCO2();
-    Serial.println("Air_Quality_State");
+    // Serial.println("Air_Quality_State");
     break;
-   }
-   
-   case TIMER_STATE:
-   {
-
+  }
+  case TIMER_STATE:
+  {
     handleMenuChange(CLOCK_STATE);
     buttonReleaseHandler();
 
     clearDisplayOnce();
     showTimer();
     setTimerInterval();
-   Serial.println("Timer_State");
-   }
+    setTimer();
+    // Serial.println("Timer_State");
+    break;
   }
-} 
-
-
+  }
+}

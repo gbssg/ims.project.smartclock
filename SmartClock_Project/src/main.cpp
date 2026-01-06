@@ -12,6 +12,7 @@
 #include <WiFiUdp.h>
 #include <Menu.h>
 #include <Buzzer.h>
+#include <Timer.h>
 
 #define UTC_OFFSET_SECONDS 3600 // UTC+1
 
@@ -64,7 +65,9 @@ SparkFun_ENS160 ens160;
 BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
-SimpleSoftTimer displayTime(100);
+SimpleSoftTimer displayTimer(100);
+SimpleSoftTimer arrowPositionTimer(250);
+SimpleSoftTimer valueChangeTimer(500);
 
 // Setup Funktion
 void setup()
@@ -74,7 +77,9 @@ void setup()
 
   Serial.begin(115200);
   Wire.begin();
-  displayTime.start(100);
+  displayTimer.start(100);
+  arrowPositionTimer.start(250);
+  valueChangeTimer.start(500);
   connectWifi();
   timeClient.begin();
   analogReadResolution(7);
@@ -116,34 +121,27 @@ void setup()
   button.LEDoff();
 }
 
-// Loop Funktion
 void loop()
 {
-
   // Joystick Werte einlesen
   readAxisY = analogRead(JoyStick_Y_Pin);
   readAxisX = analogRead(JoyStick_X_Pin);
 
   // NTP Client updaten
   timeClient.update();
-  
+
   // CO2 Wert und Temperatur auslesen
   ppm = ens160.getECO2();
   temp = bme280.readTempC() - tempDiff;
 
   // Menü-Funktion aufrufen
   manageMenu();
-  
+
   // Buzzer Funktion aufrufen
   warnBuzz();
-
-  // Temperatur und CO2 Gehalt anzeigen
-  printTempAndCO2();
 
   // LED vom Button steuern
   button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
 
   // readAxes();
-
-
 }

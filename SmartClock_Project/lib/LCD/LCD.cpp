@@ -9,7 +9,7 @@
 #define UTC_OFFSET_SECONDS 3600 // UTC+1
 using namespace HolisticSolutions;
 
-extern SimpleSoftTimer displayTime;
+extern SimpleSoftTimer displayTimer;
 extern SerLCD lcd;
 extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
@@ -21,7 +21,7 @@ extern int midPPM;
 extern int readAxisY;
 extern int readAxisX;
 
-// Smiley Symbole für das LCD 
+// Smiley Symbole für das LCD
 byte smiley[8] = {
     0b00000,
     0b00000,
@@ -32,7 +32,7 @@ byte smiley[8] = {
     0b01110,
     0b00000};
 
-// Neutraler Smiley für das LCD 
+// Neutraler Smiley für das LCD
 byte neutral[8] = {
     0b00000,
     0b00000,
@@ -42,8 +42,8 @@ byte neutral[8] = {
     0b11111,
     0b00000,
     0b00000};
-    
-// Frownie Smiley für das LCD 
+
+// Frownie Smiley für das LCD
 byte frownie[8] = {
     0b00000,
     0b00000,
@@ -54,7 +54,7 @@ byte frownie[8] = {
     0b01110,
     0b10001};
 
-// Totenkopf Smiley für das LCD 
+// Totenkopf Smiley für das LCD
 byte death[8] = {
     0b00000,
     0b00000,
@@ -65,7 +65,7 @@ byte death[8] = {
     0b01110,
     0b10001};
 
-// Pfeil Symbol für das LCD 
+// Pfeil Symbol für das LCD
 byte arrow[8] = {
     0b00100,
     0b01110,
@@ -74,10 +74,9 @@ byte arrow[8] = {
     0b00100,
     0b00100,
     0b00100,
-    0b00000 
-};
+    0b00000};
 
-// Funktion für die Initialisierung des LCD 
+// Funktion für die Initialisierung des LCD
 void lcdSetup()
 {
   Wire1.begin();
@@ -96,23 +95,23 @@ void lcdSetup()
 // Funktion für die Anzeige von der Zeit und vom Datum
 void printTimeAndDate()
 {
-  if (displayTime.isTimeout())
+  if (displayTimer.isTimeout())
   {
-  lcd.setCursor(0, 0);
-  lcd.print("Time:   ");
-  lcd.print(timeClient.getFormattedTime());
+    lcd.setCursor(0, 0);
+    lcd.print("Time:   ");
+    lcd.print(timeClient.getFormattedTime());
 
-  lcd.setCursor(0, 1);
-  lcd.print("Date:   ");
-  lcd.print(timeClient.getFormattedDate());
-  displayTime.restart();
+    lcd.setCursor(0, 1);
+    lcd.print("Date:   ");
+    lcd.print(timeClient.getFormattedDate());
+    displayTimer.restart();
   }
 }
 
 // Funktion für die Anzeige von der Temperatur und vom CO2-Gehalt
 void printTempAndCO2()
 {
-  if (displayTime.isTimeout()) 
+  if (displayTimer.isTimeout())
   {
     // printTemp
     lcd.setCursor(0, 1);
@@ -121,7 +120,7 @@ void printTempAndCO2()
     lcd.println(" C   ");
 
     // printCO2
-    lcd.setCursor(0,0);
+    lcd.setCursor(0, 0);
     if (ppm >= highPPM)
     {
       lcd.print("CO2 : ");
@@ -129,7 +128,7 @@ void printTempAndCO2()
       lcd.print(" ppm ");
       lcd.writeChar(2);
     }
-    else if (ppm < highPPM && ppm > midPPM )
+    else if (ppm < highPPM && ppm > midPPM)
     {
       lcd.print("CO2 :  ");
       lcd.print(ppm);
@@ -142,19 +141,19 @@ void printTempAndCO2()
       lcd.print(ppm);
       lcd.print(" ppm ");
       lcd.writeChar(0);
-    }      
-  displayTime.restart();
+    }
+    displayTimer.restart();
   }
 }
 
 void readAxes()
 {
-  if (displayTime.isTimeout()) 
+  if (displayTimer.isTimeout())
   {
     Serial.print("Y-Axis: ");
     Serial.println(readAxisY);
     Serial.print("X-Axis: ");
     Serial.println(readAxisX);
-    displayTime.restart();
+    displayTimer.restart();
   }
 }
