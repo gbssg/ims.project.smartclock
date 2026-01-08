@@ -40,6 +40,8 @@ int hour;
 int minute;
 int second;
 int arrowPosition = 14;
+bool swipedUp;
+bool timerHasStarted = false;
 
 String hourStr = hour < 10 ? "0" + String(hour) : String(hour);
 String minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
@@ -66,10 +68,7 @@ BME280 bme280;
 SerLCD lcd;
 QwiicButton button;
 SimpleSoftTimer displayTimer(100);
-SimpleSoftTimer arrowPositionTimer(250);
-SimpleSoftTimer valueChangeTimer(500);
 
-// Setup Funktion
 void setup()
 {
   pinMode(JoyStick_X_Pin, INPUT);
@@ -78,8 +77,7 @@ void setup()
   Serial.begin(115200);
   Wire.begin();
   displayTimer.start(100);
-  arrowPositionTimer.start(250);
-  valueChangeTimer.start(500);
+  timerInit();
   connectWifi();
   timeClient.begin();
   analogReadResolution(7);
@@ -143,5 +141,5 @@ void loop()
   // LED vom Button steuern
   button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
 
-  // readAxes();
+  startTimer();
 }

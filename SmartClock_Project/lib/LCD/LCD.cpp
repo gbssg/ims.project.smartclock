@@ -76,6 +76,16 @@ byte arrow[8] = {
     0b00100,
     0b00000};
 
+byte start[8] = {
+    0b00000,
+    0b01100,
+    0b01110,
+    0b01111,
+    0b01111,
+    0b01110,
+    0b01100,
+    0b00000};
+
 // Funktion für die Initialisierung des LCD
 void lcdSetup()
 {
@@ -90,6 +100,7 @@ void lcdSetup()
   lcd.createChar(2, frownie);
   lcd.createChar(3, death);
   lcd.createChar(4, arrow);
+  lcd.createChar(5, start);
 }
 
 // Funktion für die Anzeige von der Zeit und vom Datum

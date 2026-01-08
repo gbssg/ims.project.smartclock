@@ -3,6 +3,8 @@
 #include "LCD.h"
 #include "Menu.h"
 #include <SparkFun_Qwiic_Button.h>
+#include <Buzzer.h>
+#include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
 #define JoyStick_Y_Pin A0
 #define JoyStick_X_Pin A1
 
@@ -14,13 +16,17 @@ extern int hour;
 extern int minute;
 extern int second;
 extern int arrowPosition;
+extern bool swipedUp;
+extern bool timerHasStarted;
 
 extern String hourStr;
 extern String minuteStr;
 extern String secondStr;
 
-extern SimpleSoftTimer arrowPositionTimer;
-extern SimpleSoftTimer valueChangeTimer;
+SimpleSoftTimer arrowPositionTimer(250);
+SimpleSoftTimer valueChangeTimer(500);
+SimpleSoftTimer timerCountdown(1000);
+
 enum menuState
 {
     CLOCK_STATE,
@@ -30,6 +36,12 @@ enum menuState
 
 extern menuState currentState;
 
+void timerInit()
+{
+    arrowPositionTimer.start(250);
+    valueChangeTimer.start(500);
+    timerCountdown.start(1000);
+}
 void initializeTimerVariables()
 {
     hourStr = hour < 10 ? "0" + String(hour) : String(hour);
@@ -39,9 +51,10 @@ void initializeTimerVariables()
 
 bool swipeRight()
 {
-    if (readAxisX > upRight)
+    if (readAxisX > upRight && valueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Right");
+        valueChangeTimer.restart();
         return true;
     }
     return false;
@@ -49,19 +62,9 @@ bool swipeRight()
 
 bool swipeLeft()
 {
-    if (readAxisX < downLeft)
+    if (readAxisX < downLeft && valueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Left");
-        return true;
-    }
-    return false;
-}
-
-bool swipeUp()
-{
-    if (readAxisY > upRight && valueChangeTimer.isTimeout())
-    {
-        Serial.println("Swiped Up");
         valueChangeTimer.restart();
         return true;
     }
@@ -79,6 +82,22 @@ bool swipeDown()
     return false;
 }
 
+bool swipeUp()
+{
+    if (readAxisY > upRight && valueChangeTimer.isTimeout())
+    {
+        Serial.println("Swiped Up");
+        swipedUp = true;
+        valueChangeTimer.restart();
+        return true;
+    }
+    else if (swipedUp && swipeDown() || swipeLeft() || swipeRight())
+    {
+        swipedUp = false;
+    }
+    return false;
+}
+
 void showTimer()
 {
     if (displayTimer.isTimeout())
@@ -92,16 +111,21 @@ void showTimer()
         lcd.print(secondStr);
         lcd.print(" ");
         lcd.setCursor(arrowPosition, 1);
-        lcd.writeChar(4);
+        if (arrowPosition >= 7)
+        {
+            lcd.writeChar(4);
+        }
+        lcd.setCursor(2, 1);
+        lcd.writeChar(5);
         displayTimer.restart();
     }
 }
 
-void setTimerInterval()
+void chooseOption()
 {
     if (arrowPositionTimer.isTimeout())
     {
-        if (swipeRight() && arrowPosition < 14)
+        if (swipeRight() && arrowPosition < 14 && arrowPosition >= 7)
         {
             do
             {
@@ -120,6 +144,18 @@ void setTimerInterval()
             Serial.println(arrowPosition);
         }
         arrowPositionTimer.restart();
+    }
+
+    if (arrowPosition == 7 && swipeLeft())
+    {
+        arrowPosition = 1;
+        lcd.clear();
+        lcd.setCursor(2, 1);
+    }
+    else if (arrowPosition < 7 && swipeRight())
+    {
+        arrowPosition = 7;
+        lcd.clear();
     }
 }
 
@@ -214,4 +250,40 @@ void setTimer()
         break;
     }
     initializeTimerVariables();
+}
+
+void startTimer()
+{
+    if (timerCountdown.isTimeout())
+    {
+
+        if (arrowPosition == 1 && swipedUp && (hour > 0 || minute > 0 || second > 0))
+        {
+            timerHasStarted = true;
+
+            if (second > 0)
+            {
+                second--;
+            }
+            else if (minute > 0)
+            {
+                minute--;
+                second = 59;
+            }
+            else if (hour > 0)
+            {
+                hour--;
+                minute = 59;
+                second = 59;
+            }
+        }
+        else if (arrowPosition == 1 && swipedUp && hour == 0 && minute == 0 && second == 0 && timerHasStarted)
+        {
+            button.clearEventBits();
+            buzzerBuzzing = true;
+            timerBuzz();
+            currentState = TIMER_STATE;
+        }
+        timerCountdown.restart();
+    }
 }

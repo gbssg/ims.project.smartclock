@@ -85,8 +85,9 @@ void manageMenu()
 
     clearDisplayOnce();
     showTimer();
-    setTimerInterval();
+    chooseOption();
     setTimer();
+    swipeUp();
     // Serial.println("Timer_State");
     break;
   }

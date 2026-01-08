@@ -6,5 +6,11 @@ bool swipeUp();
 bool swipeDown();
 
 void setTimer();
+void startTimer();
 void showTimer();
-void setTimerInterval();
+void chooseOption();
+void initializeTimerVariables();
+void timerInit();
+
+extern bool swipedUp;
+extern bool timerHasStarted;

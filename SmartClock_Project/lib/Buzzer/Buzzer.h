@@ -1,4 +1,4 @@
-# pragma once
+#pragma once
 
 #include <SerLCD.h>
 #include <SparkFun_Qwiic_Buzzer_Arduino_Library.h>
@@ -17,3 +17,4 @@ extern bool buzzerMuted;
 extern bool buzzerBuzzing;
 
 void warnBuzz();
+void timerBuzz();
