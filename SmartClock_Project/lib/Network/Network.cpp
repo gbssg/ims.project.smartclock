@@ -4,6 +4,7 @@
 #include <Secrets.h>
 
 int wifiTryCount = 0;
+WiFiUDP ntpUDP;
 
 // Funktion für die Verbindung mit dem WLAN
 void connectWifi()
@@ -11,7 +12,8 @@ void connectWifi()
     wifiTryCount = 0;
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi...");
-    while (WiFi.status() != WL_CONNECTED && wifiTryCount < 20) {
+    while (WiFi.status() != WL_CONNECTED && wifiTryCount < 20)
+    {
         delay(500);
         Serial.print(".");
         wifiTryCount++;

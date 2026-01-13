@@ -10,18 +10,19 @@
 
 extern int readAxisY;
 extern int readAxisX;
-extern int upRight;
-extern int downLeft;
-extern int hour;
-extern int minute;
-extern int second;
-extern int arrowPosition;
-extern bool swipedUp;
-extern bool timerHasStarted;
+int upRight = 75;
+int downLeft = 25;
+int arrowPosition = 14;
+bool swipedUp;
+bool timerHasStarted = false;
 
-extern String hourStr;
-extern String minuteStr;
-extern String secondStr;
+int hour;
+int minute;
+int second;
+
+String hourStr = hour < 10 ? "0" + String(hour) : String(hour);
+String minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
+String secondStr = second < 10 ? "0" + String(second) : String(second);
 
 SimpleSoftTimer arrowPositionTimer(250);
 SimpleSoftTimer valueChangeTimer(500);
@@ -166,13 +167,13 @@ void setTimer()
     case 7:
         if (swipeUp())
         {
-            hour += 5;
+            hour += 10;
             if (hour > 99)
                 hour = 99;
         }
         else if (swipeDown())
         {
-            hour -= 5;
+            hour -= 10;
             if (hour < 0)
                 hour = 0;
         }
@@ -195,13 +196,13 @@ void setTimer()
     case 10:
         if (swipeUp())
         {
-            minute += 15;
+            minute += 10;
             if (minute > 59)
                 minute = 59;
         }
         else if (swipeDown())
         {
-            minute -= 15;
+            minute -= 10;
             if (minute < 0)
                 minute = 0;
         }
@@ -223,13 +224,13 @@ void setTimer()
     case 13:
         if (swipeUp())
         {
-            second += 15;
+            second += 10;
             if (second > 59)
                 second = 59;
         }
         else if (swipeDown())
         {
-            second -= 15;
+            second -= 10;
             if (second < 0)
                 second = 0;
         }

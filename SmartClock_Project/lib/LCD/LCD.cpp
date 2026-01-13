@@ -7,19 +7,23 @@
 #include <SimpleSoftTimer.h>
 
 #define UTC_OFFSET_SECONDS 3600 // UTC+1
-using namespace HolisticSolutions;
 
 extern SimpleSoftTimer displayTimer;
-extern SerLCD lcd;
 extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
+SerLCD lcd;
 
-extern int ppm;
-extern float temp;
-extern int highPPM;
-extern int midPPM;
-extern int readAxisY;
-extern int readAxisX;
+SimpleSoftTimer displayTimer(100);
+
+int ppm;
+float temp;
+int highTemp = 28;
+int highPPM = 1000;
+int midPPM = 800;
+int readAxisY;
+int readAxisX;
+int brightness = 100;
+int tempDiff = 5;
 
 // Smiley Symbole für das LCD
 byte smiley[8] = {
@@ -76,6 +80,7 @@ byte arrow[8] = {
     0b00100,
     0b00000};
 
+// Start Symbol für das LCD
 byte start[8] = {
     0b00000,
     0b01100,
@@ -94,6 +99,7 @@ void lcdSetup()
   lcd.setAddress(0x72);
   lcd.clear();
   lcd.setContrast(50);
+  displayTimer.start(100);
 
   lcd.createChar(0, smiley);
   lcd.createChar(1, neutral);
@@ -124,47 +130,38 @@ void printTempAndCO2()
 {
   if (displayTimer.isTimeout())
   {
-    // printTemp
-    lcd.setCursor(0, 1);
-    lcd.print("Temp:  ");
-    lcd.print(temp, 2);
-    lcd.println(" C   ");
 
     // printCO2
     lcd.setCursor(0, 0);
+    lcd.print("CO2 : ");
+
     if (ppm >= highPPM)
     {
-      lcd.print("CO2 : ");
       lcd.print(ppm);
       lcd.print(" ppm ");
       lcd.writeChar(2);
     }
     else if (ppm < highPPM && ppm > midPPM)
     {
-      lcd.print("CO2 :  ");
+      lcd.print(" ");
       lcd.print(ppm);
       lcd.print(" ppm ");
       lcd.writeChar(1);
     }
     else if (ppm <= midPPM)
     {
-      lcd.print("CO2 :  ");
+      lcd.print(" ");
       lcd.print(ppm);
       lcd.print(" ppm ");
       lcd.writeChar(0);
     }
-    displayTimer.restart();
-  }
-}
 
-void readAxes()
-{
-  if (displayTimer.isTimeout())
-  {
-    Serial.print("Y-Axis: ");
-    Serial.println(readAxisY);
-    Serial.print("X-Axis: ");
-    Serial.println(readAxisX);
+    // printTemp
+    lcd.setCursor(0, 1);
+    lcd.print("Temp:  ");
+    lcd.print(temp, 1);
+    lcd.println("  C   ");
+
     displayTimer.restart();
   }
 }

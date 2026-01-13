@@ -12,13 +12,14 @@ enum menuState
   TIMER_STATE
 };
 
+menuState currentState;
+menuState lastState = CLOCK_STATE;
+
 extern bool buzzerBuzzing;
 
-extern bool buttonRelease;
+bool buttonRelease = false;
 extern SimpleSoftTimer displayTimer;
 extern QwiicButton button;
-extern menuState currentState;
-extern menuState lastState;
 
 // Funktion zum Verwalten des Menüs basierend auf dem aktuellen Zustand
 void buttonReleaseHandler()
@@ -88,6 +89,7 @@ void manageMenu()
     chooseOption();
     setTimer();
     swipeUp();
+    startTimer();
     // Serial.println("Timer_State");
     break;
   }

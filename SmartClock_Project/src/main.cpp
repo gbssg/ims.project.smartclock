@@ -14,60 +14,13 @@
 #include <Buzzer.h>
 #include <Timer.h>
 
-#define UTC_OFFSET_SECONDS 3600 // UTC+1
-
 #define JoyStick_Y_Pin A0
 #define JoyStick_X_Pin A1
 
 using namespace HolisticSolutions;
 
-// Variabeln definieren
-bool buttonRelease = false;
-int ppm;
-int tempDiff = 5;
-float temp;
-int brightness = 100;
-int highPPM = 1000;
-int midPPM = 800;
-int highTemp = 28;
-bool buzzerMuted = false;
-bool buzzerBuzzing = true;
-int readAxisY;
-int readAxisX;
-int upRight = 75;
-int downLeft = 25;
-int hour;
-int minute;
-int second;
-int arrowPosition = 14;
-bool swipedUp;
-bool timerHasStarted = false;
-
-String hourStr = hour < 10 ? "0" + String(hour) : String(hour);
-String minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
-String secondStr = second < 10 ? "0" + String(second) : String(second);
-
-enum menuState
-{
-  CLOCK_STATE,
-  AIR_QUALITY_STATE,
-  TIMER_STATE
-};
-
-menuState currentState;
-menuState lastState = CLOCK_STATE;
-bool displayCleared = false;
-
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", UTC_OFFSET_SECONDS);
-
-// Objekte erstellen
-QwiicBuzzer buzzer;
 SparkFun_ENS160 ens160;
 BME280 bme280;
-SerLCD lcd;
-QwiicButton button;
-SimpleSoftTimer displayTimer(100);
 
 void setup()
 {
@@ -76,7 +29,6 @@ void setup()
 
   Serial.begin(115200);
   Wire.begin();
-  displayTimer.start(100);
   timerInit();
   connectWifi();
   timeClient.begin();

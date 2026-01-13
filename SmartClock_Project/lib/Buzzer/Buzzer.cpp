@@ -3,17 +3,26 @@
 #include <SparkFun_Qwiic_Button.h>
 #include "LCD.h"
 #include "Timer.h"
+#include "Menu.h"
 
-extern QwiicBuzzer buzzer;
+QwiicBuzzer buzzer;
 extern SerLCD lcd;
 extern QwiicButton button;
+
+enum menuState
+{
+  CLOCK_STATE,
+  AIR_QUALITY_STATE,
+  TIMER_STATE
+};
 
 extern int ppm;
 extern float temp;
 extern int highPPM;
 extern int midPPM;
-extern bool buzzerMuted;
-extern bool buzzerBuzzing;
+extern menuState currentState;
+bool buzzerMuted = false;
+bool buzzerBuzzing = true;
 
 // Funktion für das Warnsignal des Buzzers
 void warnBuzz()
@@ -25,7 +34,8 @@ void warnBuzz()
       buzzerBuzzing = true;
       buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
-      printTempAndCO2();
+      buzzerMuted = false;
+      currentState = AIR_QUALITY_STATE;
     }
 
     if (button.isPressed())
@@ -45,7 +55,7 @@ void warnBuzz()
 void timerBuzz()
 {
   buzzerBuzzing = true;
-  buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
+  buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MAX);
   buzzer.on();
 
   if (button.hasBeenClicked() || swipeDown() || swipeLeft() || swipeRight() || swipeUp())

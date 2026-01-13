@@ -23,13 +23,13 @@ extern int highPPM;
 extern int midPPM;
 extern int readAxisY;
 extern int readAxisX;
+extern int brightness;
+extern int tempDiff;
 
 void lcdSetup();
 
 void printTimeAndDate();
 
 void printTempAndCO2();
-
-void readAxes();
 
 void clearDisplay();
