@@ -2,7 +2,6 @@
 
 #include <Wire.h>
 #include <SerLCD.h>
-#include "LCD.h"
 #include <Network.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>

@@ -133,12 +133,13 @@ void printTempAndCO2()
 
     // printCO2
     lcd.setCursor(0, 0);
-    lcd.print("CO2 : ");
+    lcd.print("CO2 :");
 
     if (ppm >= highPPM)
     {
       lcd.print(ppm);
       lcd.print(" ppm ");
+      lcd.setCursor(15, 0);
       lcd.writeChar(2);
     }
     else if (ppm < highPPM && ppm > midPPM)
@@ -146,6 +147,7 @@ void printTempAndCO2()
       lcd.print(" ");
       lcd.print(ppm);
       lcd.print(" ppm ");
+      lcd.setCursor(15, 0);
       lcd.writeChar(1);
     }
     else if (ppm <= midPPM)
@@ -153,6 +155,7 @@ void printTempAndCO2()
       lcd.print(" ");
       lcd.print(ppm);
       lcd.print(" ppm ");
+      lcd.setCursor(15, 0);
       lcd.writeChar(0);
     }
 
@@ -160,7 +163,9 @@ void printTempAndCO2()
     lcd.setCursor(0, 1);
     lcd.print("Temp:  ");
     lcd.print(temp, 1);
-    lcd.println("  C   ");
+    lcd.setCursor(12, 1);
+    lcd.write(223);
+    lcd.print("C");
 
     displayTimer.restart();
   }

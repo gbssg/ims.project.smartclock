@@ -12,7 +12,7 @@ enum menuState
   TIMER_STATE
 };
 
-menuState currentState;
+menuState currentState = CLOCK_STATE;
 menuState lastState = CLOCK_STATE;
 
 extern bool buzzerBuzzing;
