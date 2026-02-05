@@ -65,7 +65,6 @@ void manageMenu()
 
     clearDisplayOnce();
     printTimeAndDate();
-    // Serial.println("Clock_State");
     break;
   }
 
@@ -76,7 +75,6 @@ void manageMenu()
 
     clearDisplayOnce();
     printTempAndCO2();
-    // Serial.println("Air_Quality_State");
     break;
   }
   case TIMER_STATE:
@@ -90,7 +88,6 @@ void manageMenu()
     setTimer();
     swipeUp();
     startTimer();
-    // Serial.println("Timer_State");
     break;
   }
   }

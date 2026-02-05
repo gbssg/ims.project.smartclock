@@ -55,7 +55,7 @@ void warnBuzz()
 void timerBuzz()
 {
   buzzerBuzzing = true;
-  buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MAX);
+  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
   buzzer.on();
 
   if (button.hasBeenClicked() || swipeDown() || swipeLeft() || swipeRight() || swipeUp())

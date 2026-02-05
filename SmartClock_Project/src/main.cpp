@@ -49,11 +49,12 @@ void setup()
   }
 
   if (buzzer.begin() == false)
-  {
-    Serial.println("Buzzer Hat nicht geantwortet.");
-    while (1)
-      ;
-  }
+    3
+    {
+      Serial.println("Buzzer Hat nicht geantwortet.");
+      while (1)
+        ;
+    }
 
   if (button.begin() == false)
   {

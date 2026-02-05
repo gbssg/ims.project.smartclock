@@ -43,6 +43,7 @@ void timerInit()
     valueChangeTimer.start(500);
     timerCountdown.start(1000);
 }
+
 void initializeTimerVariables()
 {
     hourStr = hour < 10 ? "0" + String(hour) : String(hour);
@@ -124,9 +125,14 @@ void showTimer()
 
 void chooseOption()
 {
+    bool leftDetected = false;
+    bool rightDetected = false;
     if (arrowPositionTimer.isTimeout())
     {
-        if (swipeRight() && arrowPosition < 14 && arrowPosition >= 7)
+        rightDetected = swipeRight();
+        leftDetected = swipeLeft();
+
+        if (rightDetected && arrowPosition < 14 && arrowPosition >= 7)
         {
             do
             {
@@ -135,25 +141,25 @@ void chooseOption()
             lcd.clear();
             Serial.println(arrowPosition);
         }
-        else if (swipeLeft() && arrowPosition > 7)
+        else if (leftDetected && arrowPosition > 7)
         {
             do
             {
                 arrowPosition -= 1;
-            } while ((arrowPosition == 9 || arrowPosition == 12) && arrowPosition > 7);
+            } while ((arrowPosition == 9 || arrowPosition == 12));
             lcd.clear();
             Serial.println(arrowPosition);
         }
         arrowPositionTimer.restart();
     }
 
-    if (arrowPosition == 7 && swipeLeft())
+    if (arrowPosition == 7 && leftDetected)
     {
         arrowPosition = 1;
         lcd.clear();
         lcd.setCursor(2, 1);
     }
-    else if (arrowPosition < 7 && swipeRight())
+    else if (arrowPosition < 7 && rightDetected)
     {
         arrowPosition = 7;
         lcd.clear();
@@ -261,6 +267,8 @@ void startTimer()
         if (arrowPosition == 1 && swipedUp && (hour > 0 || minute > 0 || second > 0))
         {
             timerHasStarted = true;
+            lcd.setCursor(2, 1);
+            lcd.writeChar(6);
 
             if (second > 0)
             {
