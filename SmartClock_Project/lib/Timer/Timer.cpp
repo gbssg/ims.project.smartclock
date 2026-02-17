@@ -43,6 +43,7 @@ void timerInit()
     valueChangeTimer.start(500);
     timerCountdown.start(1000);
 }
+
 void initializeTimerVariables()
 {
     hourStr = hour < 10 ? "0" + String(hour) : String(hour);
@@ -124,7 +125,10 @@ void showTimer()
 
 void chooseOption()
 {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 429471d9ce1d1c9883211fc70499db3735c811f4
     bool leftDetected = false;
     bool rightDetected = false;
     if (arrowPositionTimer.isTimeout())
