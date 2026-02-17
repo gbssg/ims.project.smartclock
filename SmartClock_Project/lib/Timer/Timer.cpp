@@ -24,8 +24,8 @@ String hourStr = hour < 10 ? "0" + String(hour) : String(hour);
 String minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
 String secondStr = second < 10 ? "0" + String(second) : String(second);
 
-SimpleSoftTimer arrowPositionTimer(250);
-SimpleSoftTimer valueChangeTimer(500);
+SimpleSoftTimer displayTimer(50);
+SimpleSoftTimer arrowPositionValueChangeTimer(500);
 SimpleSoftTimer timerCountdown(1000);
 
 enum menuState
@@ -39,8 +39,8 @@ extern menuState currentState;
 
 void timerInit()
 {
-    arrowPositionTimer.start(250);
-    valueChangeTimer.start(500);
+    displayTimer.start(50);
+    arrowPositionValueChangeTimer.start(500);
     timerCountdown.start(1000);
 }
 
@@ -53,10 +53,10 @@ void initializeTimerVariables()
 
 bool swipeRight()
 {
-    if (readAxisX > upRight && valueChangeTimer.isTimeout())
+    if (readAxisX > upRight && arrowPositionValueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Right");
-        valueChangeTimer.restart();
+        arrowPositionValueChangeTimer.restart();
         return true;
     }
     return false;
@@ -64,10 +64,10 @@ bool swipeRight()
 
 bool swipeLeft()
 {
-    if (readAxisX < downLeft && valueChangeTimer.isTimeout())
+    if (readAxisX < downLeft && arrowPositionValueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Left");
-        valueChangeTimer.restart();
+        arrowPositionValueChangeTimer.restart();
         return true;
     }
     return false;
@@ -75,10 +75,10 @@ bool swipeLeft()
 
 bool swipeDown()
 {
-    if (readAxisY < downLeft && valueChangeTimer.isTimeout())
+    if (readAxisY < downLeft && arrowPositionValueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Down");
-        valueChangeTimer.restart();
+        arrowPositionValueChangeTimer.restart();
         return true;
     }
     return false;
@@ -86,11 +86,11 @@ bool swipeDown()
 
 bool swipeUp()
 {
-    if (readAxisY > upRight && valueChangeTimer.isTimeout())
+    if (readAxisY > upRight && arrowPositionValueChangeTimer.isTimeout())
     {
         Serial.println("Swiped Up");
         swipedUp = true;
-        valueChangeTimer.restart();
+        arrowPositionValueChangeTimer.restart();
         return true;
     }
     else if (swipedUp && swipeDown() || swipeLeft() || swipeRight())
@@ -125,39 +125,32 @@ void showTimer()
 
 void chooseOption()
 {
-<<<<<<< HEAD
-
-=======
->>>>>>> 429471d9ce1d1c9883211fc70499db3735c811f4
     bool leftDetected = false;
     bool rightDetected = false;
-    if (arrowPositionTimer.isTimeout())
-    {
-        rightDetected = swipeRight();
-        leftDetected = swipeLeft();
 
-        if (rightDetected && arrowPosition < 14 && arrowPosition >= 7)
+    rightDetected = swipeRight();
+    leftDetected = swipeLeft();
+
+    if (rightDetected && arrowPosition < 14 && arrowPosition >= 7)
+    {
+        do
         {
-            do
-            {
-                arrowPosition += 1;
-            } while ((arrowPosition == 9 || arrowPosition == 12) && arrowPosition < 14);
-            lcd.clear();
-            Serial.println(arrowPosition);
-        }
-        else if (leftDetected && arrowPosition > 7)
+            arrowPosition += 1;
+        } while ((arrowPosition == 9 || arrowPosition == 12) && arrowPosition < 14);
+        lcd.clear();
+        Serial.println(arrowPosition);
+    }
+    else if (leftDetected && arrowPosition > 7)
+    {
+        do
         {
-            do
-            {
-                arrowPosition -= 1;
-            } while ((arrowPosition == 9 || arrowPosition == 12));
-            lcd.clear();
-            Serial.println(arrowPosition);
-        }
-        arrowPositionTimer.restart();
+            arrowPosition -= 1;
+        } while ((arrowPosition == 9 || arrowPosition == 12));
+        lcd.clear();
+        Serial.println(arrowPosition);
     }
 
-    if (arrowPosition == 7 && leftDetected)
+    else if (arrowPosition == 7 && leftDetected)
     {
         arrowPosition = 1;
         lcd.clear();
@@ -272,7 +265,6 @@ void startTimer()
         {
             timerHasStarted = true;
             lcd.setCursor(2, 1);
-            lcd.writeChar(6);
 
             if (second > 0)
             {

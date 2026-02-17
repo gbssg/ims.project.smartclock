@@ -49,12 +49,11 @@ void setup()
   }
 
   if (buzzer.begin() == false)
-    3
-    {
-      Serial.println("Buzzer Hat nicht geantwortet.");
-      while (1)
-        ;
-    }
+  {
+    Serial.println("Buzzer Hat nicht geantwortet.");
+    while (1)
+      ;
+  }
 
   if (button.begin() == false)
   {
@@ -74,6 +73,9 @@ void setup()
 
 void loop()
 {
+  // LED vom Button steuern
+  button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
+
   // Joystick Werte einlesen
   readAxisY = analogRead(JoyStick_Y_Pin);
   readAxisX = analogRead(JoyStick_X_Pin);
@@ -90,9 +92,4 @@ void loop()
 
   // Buzzer Funktion aufrufen
   warnBuzz();
-
-  // LED vom Button steuern
-  button.isPressed() ? button.LEDon(brightness) : button.LEDoff();
-
-  startTimer();
 }

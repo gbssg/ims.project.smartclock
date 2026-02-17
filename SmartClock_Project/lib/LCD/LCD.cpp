@@ -13,8 +13,6 @@ extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
 SerLCD lcd;
 
-SimpleSoftTimer displayTimer(100);
-
 int ppm;
 float temp;
 int highTemp = 28;
@@ -99,14 +97,12 @@ void lcdSetup()
   lcd.setAddress(0x72);
   lcd.clear();
   lcd.setContrast(50);
-  displayTimer.start(100);
 
   lcd.createChar(0, smiley);
   lcd.createChar(1, neutral);
   lcd.createChar(2, frownie);
   lcd.createChar(3, death);
   lcd.createChar(4, arrow);
-  lcd.createChar(5, start);
 }
 
 // Funktion für die Anzeige von der Zeit und vom Datum

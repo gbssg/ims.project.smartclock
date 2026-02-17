@@ -24,7 +24,7 @@ extern QwiicButton button;
 // Funktion zum Verwalten des Menüs basierend auf dem aktuellen Zustand
 void buttonReleaseHandler()
 {
-  if (!button.isPressedQueueEmpty() && buttonRelease == true)
+  if (!button.isPressedQueueEmpty() && buttonRelease == true && !buzzerBuzzing)
   {
     buttonRelease = !buttonRelease;
     button.popPressedQueue();
@@ -34,7 +34,7 @@ void buttonReleaseHandler()
 // Funktion zum Ändern des Menüzustands bei Tastendruck
 void handleMenuChange(menuState newState)
 {
-  if (!button.isPressedQueueEmpty() && buttonRelease == false)
+  if (!button.isPressedQueueEmpty() && buttonRelease == false && !buzzerBuzzing)
   {
     currentState = newState;
     buttonRelease = !buttonRelease;

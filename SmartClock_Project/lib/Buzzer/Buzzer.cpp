@@ -32,7 +32,7 @@ void warnBuzz()
     if (!buzzerMuted)
     {
       buzzerBuzzing = true;
-      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
+      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MID);
       buzzer.on();
       buzzerMuted = false;
       currentState = AIR_QUALITY_STATE;
@@ -55,7 +55,7 @@ void warnBuzz()
 void timerBuzz()
 {
   buzzerBuzzing = true;
-  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
+  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MID);
   buzzer.on();
 
   if (button.hasBeenClicked() || swipeDown() || swipeLeft() || swipeRight() || swipeUp())
