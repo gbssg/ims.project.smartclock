@@ -9,7 +9,7 @@ void setTimer();
 void startTimer();
 void showTimer();
 void chooseOption();
-void initializeTimerVariables();
+void initTimerVariables();
 void timerInit();
 
 extern bool swipedUp;

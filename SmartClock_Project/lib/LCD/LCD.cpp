@@ -18,6 +18,7 @@ float temp;
 int highTemp = 28;
 int highPPM = 1000;
 int midPPM = 800;
+int ppmDiff = 100;
 int readAxisY;
 int readAxisX;
 int brightness = 100;

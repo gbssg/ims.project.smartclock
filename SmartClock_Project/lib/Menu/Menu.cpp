@@ -20,14 +20,30 @@ extern bool buzzerBuzzing;
 bool buttonRelease = false;
 extern SimpleSoftTimer displayTimer;
 extern QwiicButton button;
+extern SimpleSoftTimer changeMenuAutomaticallyTimer;
 
-// Funktion zum Verwalten des Menüs basierend auf dem aktuellen Zustand
-void buttonReleaseHandler()
+// Funktion um Automatisch den Menüzustand zu wechseln
+void changeMenuAutomatically()
 {
-  if (!button.isPressedQueueEmpty() && buttonRelease == true && !buzzerBuzzing)
+  if (changeMenuAutomaticallyTimer.isTimeout())
   {
-    buttonRelease = !buttonRelease;
-    button.popPressedQueue();
+    if (currentState == CLOCK_STATE)
+    {
+      currentState = AIR_QUALITY_STATE;
+    }
+    else if (currentState == AIR_QUALITY_STATE && timerHasStarted == true)
+    {
+      currentState = TIMER_STATE;
+    }
+    else if (currentState == AIR_QUALITY_STATE && timerHasStarted == false)
+    {
+      currentState = CLOCK_STATE;
+    }
+    else if (currentState == TIMER_STATE)
+    {
+      currentState = CLOCK_STATE;
+    }
+    changeMenuAutomaticallyTimer.start(30000);
   }
 }
 
@@ -39,10 +55,21 @@ void handleMenuChange(menuState newState)
     currentState = newState;
     buttonRelease = !buttonRelease;
     button.popPressedQueue();
+    changeMenuAutomaticallyTimer.start(30000);
   }
 }
 
-// Funktiom um die Anzeige, einmal pro wechseln zu reinigen
+// Funktion um beim Klick, buttonRelease zu umkehren
+void buttonReleaseHandler()
+{
+  if (!button.isPressedQueueEmpty() && buttonRelease == true && !buzzerBuzzing)
+  {
+    buttonRelease = !buttonRelease;
+    button.popPressedQueue();
+  }
+}
+
+// Funktiom um die Anzeige einmal pro wechseln zu reinigen
 void clearDisplayOnce()
 {
   if (lastState != currentState)
@@ -56,6 +83,8 @@ void clearDisplayOnce()
 // Hauptfunktion zum Verwalten des Menüs
 void manageMenu()
 {
+  changeMenuAutomatically();
+
   switch (currentState)
   {
   case CLOCK_STATE:
@@ -86,8 +115,6 @@ void manageMenu()
     showTimer();
     chooseOption();
     setTimer();
-    swipeUp();
-    startTimer();
     break;
   }
   }

@@ -84,7 +84,7 @@ void loop()
   timeClient.update();
 
   // CO2 Wert und Temperatur auslesen
-  ppm = ens160.getECO2();
+  ppm = ens160.getECO2() + ppmDiff;
   temp = bme280.readTempC() - tempDiff;
 
   // Menü-Funktion aufrufen
@@ -92,4 +92,6 @@ void loop()
 
   // Buzzer Funktion aufrufen
   warnBuzz();
+
+  startTimer();
 }

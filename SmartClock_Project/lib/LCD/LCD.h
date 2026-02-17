@@ -13,6 +13,7 @@ using namespace HolisticSolutions;
 
 extern SerLCD lcd;
 extern SimpleSoftTimer displayTimer;
+
 extern WiFiUDP ntpUDP;
 extern NTPClient timeClient;
 
@@ -24,6 +25,7 @@ extern int readAxisY;
 extern int readAxisX;
 extern int brightness;
 extern int tempDiff;
+extern int ppmDiff;
 
 void lcdSetup();
 

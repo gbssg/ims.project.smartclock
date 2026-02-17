@@ -27,18 +27,19 @@ bool buzzerBuzzing = true;
 // Funktion für das Warnsignal des Buzzers
 void warnBuzz()
 {
+
   if (ppm > midPPM)
   {
     if (!buzzerMuted)
     {
       buzzerBuzzing = true;
-      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MID);
+      buzzer.configureBuzzer(2730, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
       buzzer.on();
       buzzerMuted = false;
       currentState = AIR_QUALITY_STATE;
     }
 
-    if (button.isPressed())
+    if (swipeDown() || swipeLeft() || swipeRight() || swipeUp())
     {
       buzzer.off();
       buzzerBuzzing = false;
@@ -55,15 +56,14 @@ void warnBuzz()
 void timerBuzz()
 {
   buzzerBuzzing = true;
-  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MID);
+  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
   buzzer.on();
 
-  if (button.hasBeenClicked() || swipeDown() || swipeLeft() || swipeRight() || swipeUp())
+  if (swipeDown() || swipeLeft() || swipeRight() || swipeUp())
   {
     buzzer.off();
     timerHasStarted = false;
     buzzerBuzzing = false;
     buzzerMuted = true;
-    button.clearEventBits();
   }
 }

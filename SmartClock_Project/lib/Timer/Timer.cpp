@@ -27,6 +27,7 @@ String secondStr = second < 10 ? "0" + String(second) : String(second);
 SimpleSoftTimer displayTimer(50);
 SimpleSoftTimer arrowPositionValueChangeTimer(500);
 SimpleSoftTimer timerCountdown(1000);
+SimpleSoftTimer changeMenuAutomaticallyTimer(30000);
 
 enum menuState
 {
@@ -44,7 +45,7 @@ void timerInit()
     timerCountdown.start(1000);
 }
 
-void initializeTimerVariables()
+void initTimerVariables()
 {
     hourStr = hour < 10 ? "0" + String(hour) : String(hour);
     minuteStr = minute < 10 ? "0" + String(minute) : String(minute);
@@ -130,7 +131,6 @@ void chooseOption()
 
     rightDetected = swipeRight();
     leftDetected = swipeLeft();
-
     if (rightDetected && arrowPosition < 14 && arrowPosition >= 7)
     {
         do
@@ -253,7 +253,7 @@ void setTimer()
         }
         break;
     }
-    initializeTimerVariables();
+    initTimerVariables();
 }
 
 void startTimer()
