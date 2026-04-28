@@ -27,7 +27,7 @@ String secondStr = second < 10 ? "0" + String(second) : String(second);
 SimpleSoftTimer displayTimer(50);
 SimpleSoftTimer arrowPositionValueChangeTimer(500);
 SimpleSoftTimer timerCountdown(1000);
-SimpleSoftTimer changeMenuAutomaticallyTimer(30000);
+SimpleSoftTimer changeMenuTimer(30000);
 
 enum menuState
 {

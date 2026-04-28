@@ -91,7 +91,7 @@ void loop()
   manageMenu();
 
   // Buzzer Funktion aufrufen
-  warnBuzz();
+  warnBuzzAirQuality();
 
   startTimer();
 }

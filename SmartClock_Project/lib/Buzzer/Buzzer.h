@@ -16,5 +16,5 @@ extern int midPPM;
 extern bool buzzerMuted;
 extern bool buzzerBuzzing;
 
-void warnBuzz();
+void warnBuzzAirQuality();
 void timerBuzz();

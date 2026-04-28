@@ -25,7 +25,7 @@ bool buzzerMuted = false;
 bool buzzerBuzzing = true;
 
 // Funktion für das Warnsignal des Buzzers
-void warnBuzz()
+void warnBuzzAirQuality()
 {
 
   if (ppm > midPPM)
@@ -56,7 +56,7 @@ void warnBuzz()
 void timerBuzz()
 {
   buzzerBuzzing = true;
-  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MIN);
+  buzzer.configureBuzzer(1000, 1000, SFE_QWIIC_BUZZER_VOLUME_MAX);
   buzzer.on();
 
   if (swipeDown() || swipeLeft() || swipeRight() || swipeUp())

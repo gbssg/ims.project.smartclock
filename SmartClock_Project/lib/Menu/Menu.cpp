@@ -20,12 +20,13 @@ extern bool buzzerBuzzing;
 bool buttonRelease = false;
 extern SimpleSoftTimer displayTimer;
 extern QwiicButton button;
-extern SimpleSoftTimer changeMenuAutomaticallyTimer;
+extern SimpleSoftTimer changeMenuTimer;
 
-// Funktion um Automatisch den Menüzustand zu wechseln
+// Change Menu (30s)
 void changeMenuAutomatically()
 {
-  if (changeMenuAutomaticallyTimer.isTimeout())
+
+  if (changeMenuTimer.isTimeout())
   {
     if (currentState == CLOCK_STATE)
     {
@@ -43,7 +44,7 @@ void changeMenuAutomatically()
     {
       currentState = CLOCK_STATE;
     }
-    changeMenuAutomaticallyTimer.start(30000);
+    changeMenuTimer.start(30000);
   }
 }
 
@@ -55,7 +56,7 @@ void handleMenuChange(menuState newState)
     currentState = newState;
     buttonRelease = !buttonRelease;
     button.popPressedQueue();
-    changeMenuAutomaticallyTimer.start(30000);
+    changeMenuTimer.start(30000);
   }
 }
 
