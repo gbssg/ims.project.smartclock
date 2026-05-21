@@ -18,11 +18,11 @@
 
 ### Ausgangslage
 
-In der IMS-T wurde uns gesagt das wir ein Projekt durchführen sollen. Da wusste ich schon das ich ein Projekt erstellen möchte, welches in Problem löst und zusätzlich noch weitere Funktionen besitzt. Nach langem Überlegen bin ich dabei auf die Idee gekommen eine Uhr zu machen, welches nicht nur die Uhrzeit anzeigt, sondern auch den CO₂-Gehalt im Zimmer misst und bei schlechten Bedingungen den Nutzer davon warnt. Zusätzlich sollte noch ein einstellbarer Timer vorhanden sein.
+In der IMS-T wurde uns gesagt das wir ein Projekt durchführen sollen. Da wusste ich schon das ich ein Projekt erstellen möchte, welches ein Problem löst und zusätzlich noch weitere Funktionen besitzt. Nach langem Überlegen bin ich dabei auf die Idee gekommen eine Uhr zu machen, welches nicht nur die Uhrzeit anzeigt, sondern auch den CO₂-Gehalt im Zimmer misst und bei schlechten Bedingungen den Nutzer davon warnt. Zusätzlich sollte noch ein einstellbarer Timer vorhanden sein.
 
 ### Vision
 
-Der Grund für die Entstehung der SmartClock ist der CO₂-Gehalt. Dieser wird oft in verschiedenen Räumen wie Klassenzimmern oder Büro's missachtet. Ein hoher CO₂-Gehalt ist nicht nur schlecht für die Gesundheit, sondern verschlechtert auch die Konzentration. Die Kombination vom Sensor mit dem Buzzer eignet sich perfekt, um den Nutzer von einem hohen CO₂-Gehalt oder von zu hohen bzw. zu tiefen Temperaturen zu warnen.
+Der Grund für die Entstehung der SmartClock ist der CO₂-Gehalt. Dieser wird oft in verschiedenen Räumen wie Klassenzimmern oder Büro's missachtet. Ein hoher CO₂-Gehalt ist nicht nur schlecht für die Gesundheit, sondern verschlechtert auch die Konzentration. Die Kombination vom Sensor mit dem Buzzer sind perfekt, um den Nutzer von einem hohen CO₂-Gehalt oder von zu hohen Temperaturen zu warnen.
 
 Die einzelnen Funktionen werden jeweils in einem eigenem Menü dargestellt. Das Menü ändert sich automatisch alle 30 Sekunden und lässt sich auch Manuell mit einem Knopfklick ändern.
 
@@ -36,7 +36,7 @@ Lade den Ordner [SmartClock_Project](https://github.com/gbssg/ims.project.smartc
 
 #### Allgemeine Steuerung
 
-Um SmartClock zu steuern werden der Knopf und der Joystick verwendet. Der Knop ermöglicht das Ändern der Anzeige (Menü). Beim Joystick werden das Wischen nach oben, unten, links und rechts erkannt. Diese können verwendet werden, um den Buzzer zu stoppen und auch den Timer einstellen zu können
+Um SmartClock zu steuern werden der Knopf und der Joystick verwendet. Der Knopf ermöglicht das Ändern der Anzeige (Menü). Beim Joystick werden das Wischen nach oben, unten, links und rechts erkannt. Diese können verwendet werden, um den Buzzer zu stoppen und auch den Timer einstellen zu können
 
 #### Timer Steuerung
 
