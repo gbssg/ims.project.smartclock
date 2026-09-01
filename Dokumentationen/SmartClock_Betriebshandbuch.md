@@ -112,7 +112,6 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
 ## Links
 
 - [Technische Dokumentation](./SmartClock_TechnischeDokumentation.md)
-- [Zusammenfassung](./SmartClock_Zusammenfassung.md)
 - [ReadMe](../README.md)
 
 ## Glossar
@@ -128,5 +127,5 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
 
 ## Kontaktdaten
 
-E-Mail: sai.ragavan412@gmail.com
+E-Mail: sai.ragavan412@gmail.com  
 Github: [sai-412](https://github.com/sai-412)

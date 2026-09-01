@@ -286,7 +286,6 @@ Das Projekt wurde mit PlatformIO entwickelt und kann mit Alt + Ctrl + U auf das 
 
 ## Links
 
-- [Zusammenfassung](./SmartClock_Zusammenfassung.md)
 - [Betriebshandbuch](./SmartClock_Betriebshandbuch.md)
 - [ReadMe](../README.md)
 
@@ -303,3 +302,8 @@ Das Projekt wurde mit PlatformIO entwickelt und kann mit Alt + Ctrl + U auf das 
 - Projektcode im Ordner SmartClock_Project
 - PlatformIO-Konfiguration in platformio.ini
 - SparkFun Bibliotheken gemäss lib_deps
+
+### Kontaktdaten
+
+E-Mail: sai.ragavan412@gmail.com  
+Github: [sai-412](https://github.com/sai-412)
