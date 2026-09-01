@@ -117,7 +117,7 @@ void printTimeAndDate()
 
     lcd.setCursor(0, 1);
     lcd.print("Date:   ");
-    lcd.print(timeClient.getFormattedDate());
+    lcd.print(timeClient.getFormattedTime());
     displayTimer.restart();
   }
 }

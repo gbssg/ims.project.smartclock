@@ -2,9 +2,11 @@
 #include "Network.h"
 #include <WiFi.h>
 #include <Secrets.h>
+#include <NTPClient.h>
 
 int wifiTryCount = 0;
 WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 3600);
 
 // Funktion für die Verbindung mit dem WLAN
 void connectWifi()

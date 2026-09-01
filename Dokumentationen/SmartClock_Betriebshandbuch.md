@@ -25,7 +25,7 @@
 
 ### Umgebung
 
-Das Projekt wurde vollständig in PlatformIO im Visual Studio Code umgesetzt mit folgenden Libraries:
+Das Projekt wurde in PlatformIO im Visual Studio Code umgesetzt mit folgenden Libraries:
 
 #### Öffentliche Libraries
 
@@ -50,7 +50,7 @@ Das Projekt wurde vollständig in PlatformIO im Visual Studio Code umgesetzt mit
 
 ### Schnittstellen
 
-Der NTPClient zeigt Uhrzeit und Datum an.
+Der NTPClient wird für die Anzeige der Uhrzeit und dem Datum verwendet.
 
 ## Installation
 
@@ -66,7 +66,7 @@ Um Probleme zu vermeiden, ist es empfehlenswert, das Projekt in [Visual Studio C
 
 **Zwingend Herunterladen**
 
-Lade den Ordner [SmartClock_Project](https://github.com/gbssg/ims.project.smartclock/tree/main/SmartClock_Project) vom Github herunter. Öffnen den Ordner mit PlatformIO. Darin befindet sich "main.cpp" im Ordner "src". Sobald diese Datei geöffnet ist, kann der Code Hochgeladen werden.
+Lade den Ordner [SmartClock_Project](https://github.com/gbssg/ims.project.smartclock/tree/main/SmartClock_Project) vom Github herunter und öffne diesen mit PlatformIO. Darin befindet sich "main.cpp" im Ordner "src". Sobald diese Datei geöffnet ist, kann der Code Hochgeladen werden.
 
 ![Upload auf das Mainboard](img/Upload_Auf_Maiboard.png)
 
@@ -74,7 +74,7 @@ Es ist wichtig zu beachten, dass bei allen Komponenten das PWR-Licht leuchtet un
 
 ### Konfiguration
 
-Für die Verbindung mit dem WLAN sind die SSID und das Passwort notwendig. Dafür muss im lib Ordner ein Ordner namens "secrets" erstellt werden mit einer "Secrets.h" Datei.
+Für die Verbindung mit dem WLAN sind die SSID und das Passwort notwendig. Dafür sollte im lib Ordner ein Ordner namens "secrets" erstellt werden mit einer "Secrets.h" Datei.
 
 Der Inhalt sollte folgendermassen aussehen:
 
@@ -102,6 +102,14 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
 
 - Fehlende Verbindung:  
   Es ist wichtig zu beachten, dass bei allen Komponenten das PWR Licht leuchtet. Dies stellt sicher, dass durch jedes Komponent Strom fliesst.
+- Upload Fehler:
+  ```console
+  A fatal error occurred: Failed to connect to ESP32: Wrong boot mode detected (0x13)! The chip needs to be in download mode.
+  *** [upload] Error 2
+  ```
+  Falls beim Hochladen dieser Fehler auftaucht, muss der boot Modus vom ESP32 geändert werden. Dazu muss während dem Hochladen, der Knopf "Boot" auf dem ATP Carrier Board geklickt werden.
+
+```
 
 ## Links
 
@@ -110,8 +118,10 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
 
 ## Glossar
 
-I²C: Kommunikationsbus  
-SSID: Eindeutiger Name eines WLAN-Netzwerks
+| Fachbegriff | Definition                            |
+| ----------- | ------------------------------------- |
+| I²C         | Kommunikationsbus                     |
+| SSID        | Eindeutiger Name eines WLAN-Netzwerks |
 
 ## Abbildungsverzeichnis
 
@@ -119,5 +129,6 @@ SSID: Eindeutiger Name eines WLAN-Netzwerks
 
 ## Kontaktdaten
 
-E-Mail: sai.ragavan412@gmail.com  
+E-Mail: sai.ragavan412@gmail.com
 Github: [sai-412](https://github.com/sai-412)
+```

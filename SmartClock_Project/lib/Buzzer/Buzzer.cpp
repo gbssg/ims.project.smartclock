@@ -7,7 +7,7 @@
 
 QwiicBuzzer buzzer;
 extern SerLCD lcd;
-extern QwiicButton button;
+QwiicButton button;
 
 enum menuState
 {

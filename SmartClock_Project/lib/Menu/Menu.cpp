@@ -26,26 +26,29 @@ extern SimpleSoftTimer changeMenuTimer;
 void changeMenuAutomatically()
 {
 
-  if (changeMenuTimer.isTimeout())
+  if (!changeMenuTimer.isTimeout())
+    return;
+
+  // Rotate menu: CLOCK -> AIR_QUALITY -> (TIMER if started) -> CLOCK
+  switch (currentState)
   {
-    if (currentState == CLOCK_STATE)
-    {
-      currentState = AIR_QUALITY_STATE;
-    }
-    else if (currentState == AIR_QUALITY_STATE && timerHasStarted == true)
-    {
+  case CLOCK_STATE:
+    currentState = AIR_QUALITY_STATE;
+    break;
+  case AIR_QUALITY_STATE:
+    // timerHasStarted is expected to be defined elsewhere
+    if (timerHasStarted)
       currentState = TIMER_STATE;
-    }
-    else if (currentState == AIR_QUALITY_STATE && timerHasStarted == false)
-    {
+    else
       currentState = CLOCK_STATE;
-    }
-    else if (currentState == TIMER_STATE)
-    {
-      currentState = CLOCK_STATE;
-    }
-    changeMenuTimer.start(30000);
+    break;
+  case TIMER_STATE:
+    currentState = CLOCK_STATE;
+    break;
   }
+
+  // restart automatic rotation timer
+  changeMenuTimer.start(30000);
 }
 
 // Funktion zum Ändern des Menüzustands bei Tastendruck
