@@ -109,12 +109,11 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
   ```
   Falls beim Hochladen dieser Fehler auftaucht, muss der boot Modus vom ESP32 geändert werden. Dazu muss während dem Hochladen, der Knopf "Boot" auf dem ATP Carrier Board geklickt werden.
 
-```
-
 ## Links
 
 - [Technische Dokumentation](./SmartClock_TechnischeDokumentation.md)
 - [Zusammenfassung](./SmartClock_Zusammenfassung.md)
+- [ReadMe](../README.md)
 
 ## Glossar
 
@@ -131,4 +130,3 @@ Die Steuerung des Timers gelingt mit dem Joystick. Mit Hoch- oder Runterwischen 
 
 E-Mail: sai.ragavan412@gmail.com
 Github: [sai-412](https://github.com/sai-412)
-```

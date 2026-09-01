@@ -288,6 +288,7 @@ Das Projekt wurde mit PlatformIO entwickelt und kann mit Alt + Ctrl + U auf das 
 
 - [Zusammenfassung](./SmartClock_Zusammenfassung.md)
 - [Betriebshandbuch](./SmartClock_Betriebshandbuch.md)
+- [ReadMe](../README.md)
 
 ## Glossar
 
